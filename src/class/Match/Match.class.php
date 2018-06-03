@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
-namespace TypeMatch;
+namespace Match;
 
-class TypeMatch {
+class Match {
     
 }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
-namespace TypeMatch;
+namespace Cagnotte;
 
-class TypeMatch {
+class Cagnotte {
     
 }
