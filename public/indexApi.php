@@ -15,29 +15,21 @@ Autoloader::register();
 $ConfigDataBase = new ConfigDataBase('netfocus', './../');
 $Db = Database::init($ConfigDataBase);
 
-$User = UserManagerMYSQL::connexion('Thortur', 'Mendy!2');
+$listUser = UserManagerMYSQL::loadListAllTeam();
 
-if($User instanceof User) {
-    echo 'Oui<br/>';
-}
-else {
-    echo 'Non<br/>';
-}
-// $listUser = UserManagerMYSQL::loadListAllTeam();
+$User = new User(array(
+    'id'      => 1,
+    'nom'      => 'Lefèvre',
+    'prenom'   => 'Christophe',
+    'pseudo'   => 'Thortur',
+    'mail'     => 'lefevre.christophe@outlook.com',
+    'password' => 'Mendy!2',
+));
 
-// $User = new User(array(
-//     'id'      => 1,
-//     'nom'      => 'Lefèvre',
-//     'prenom'   => 'Christophe',
-//     'pseudo'   => 'Thortur',
-//     'mail'     => 'lefevre.christophe@outlook.com',
-//     'password' => 'Mendy!2',
-// ));
-
-// var_dump($User);
+var_dump($User);
 // UserManagerMYSQL::insertUser($User);
 // UserManagerMYSQL::updateUser($User);
-// UserManagerMYSQL::updatePassWord($User);
+UserManagerMYSQL::updatePassWord($User);
 // var_dump($res);
 // $listTeam = TeamManagerMYSQL::loadListAllTeam();
 // var_dump($listTeam);

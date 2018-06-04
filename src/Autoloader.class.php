@@ -31,8 +31,8 @@ class Autoloader {
             $root .= '../';
         }
         
-        // $chemin = $root.'foot/src/';
-        $chemin = $root.'world_cup/src/';
+        $chemin = $root.'foot/src/';
+        // $chemin = $root.'AppApiRest/src/';
         Autoloader::autoload($chemin, $class, false);
     }
 
