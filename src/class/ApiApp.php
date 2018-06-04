@@ -20,13 +20,10 @@ class ApiApp extends ApiRest {
     public function processApi(){
         if(empty($this->request['request']) === false) {
             $listVar = explode('/', $this->request['request']);
-            if($listVar[0] !== '5aafa559-c824-459e-9730-78dda3ac6adf') {
-                $this->response('', 401);
+            if(in_array($listVar[0], $this->listLangue) === true) {
+                $this->langue = $listVar[0];
             }
-            if(in_array($listVar[1], $this->listLangue) === true) {
-                $this->langue = $listVar[1];
-            }
-            $func = strtolower(trim($listVar[2]));
+            $func = strtolower(trim($listVar[1]));
             if((int)method_exists($this, $func) > 0) {
                 $this->$func(); 
             }
