@@ -3,21 +3,40 @@ declare(strict_types = 1);
 namespace Team;
 
 class Team {
-
+    /**
+     * id team
+     *
+     * @var int
+     */
     private $id;
+    /**
+     * nom de la team
+     *
+     * @var string
+     */
     private $nom;
+    /**
+     * si pour les flag
+     *
+     * @var string
+     */
     private $iso;
 
-    public function __construct($data) {
-        $this->setId($data['id']);
-        $this->setNom($data['nom']);
-        $this->setIso($data['iso']);
+    /**
+     * Construct
+     * 
+     * @param array $data
+     */
+    public function __construct(array $data) {
+        $this->setId((int)$data['id']);
+        $this->setNom((string)$data['nom']);
+        $this->setIso((string)$data['iso']);
     }
 
     /**
      * @param int $id de la team
      */
-    public function setId($id) {
+    public function setId(int $id) {
         $this->id = (int)$id;
     }
 
@@ -31,7 +50,7 @@ class Team {
     /**
      * @param string $nom de la team
      */
-    public function setNom($nom) {
+    public function setNom(string $nom) {
         $this->nom = (string)$nom;
     }
 
@@ -45,7 +64,7 @@ class Team {
     /**
      * @param string $nom de la team
      */
-    public function setIso($iso) {
+    public function setIso(string $iso) {
         $this->iso = (string)$iso;
     }
 

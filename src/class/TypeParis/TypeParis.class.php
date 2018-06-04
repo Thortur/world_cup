@@ -1,20 +1,20 @@
 <?php
 declare(strict_types = 1);
-namespace TypeMatch;
+namespace TypeParis;
 
-class TypeMatch {
+class TypeParis {
     /**
-     * id type de match
+     * id type paris
      *
      * @var int
      */
     private $id;
     /**
-     * nom du type de match
+     * type de paris
      *
      * @var string
      */
-    private $nom;
+    private $typeParis;
 
     /**
      * Construct
@@ -23,13 +23,12 @@ class TypeMatch {
      */
     public function __construct(array $data) {
         $this->setId((int)$data['id']);
-        $this->setNom((string)$data['nom']);
+        $this->setTypeParis((string)$data['typeParis']);
     }
-
     
 
     /**
-     * Get id type de match
+     * Get id type paris
      *
      * @return  int
      */ 
@@ -39,9 +38,9 @@ class TypeMatch {
     }
 
     /**
-     * Set id type de match
+     * Set id type paris
      *
-     * @param  int  $id  id type de match
+     * @param  int  $id  id type paris
      *
      * @return  self
      */ 
@@ -53,25 +52,25 @@ class TypeMatch {
     }
 
     /**
-     * Get nom du type de match
+     * Get type de paris
      *
      * @return  string
      */ 
-    public function getNom()
+    public function getTypeParis()
     {
-        return $this->nom;
+        return $this->typeParis;
     }
 
     /**
-     * Set nom du type de match
+     * Set type de paris
      *
-     * @param  string  $nom  nom du type de match
+     * @param  string  $typeParis  type de paris
      *
      * @return  self
      */ 
-    public function setNom(string $nom)
+    public function setTypeParis(string $typeParis)
     {
-        $this->nom = $nom;
+        $this->typeParis = $typeParis;
 
         return $this;
     }
