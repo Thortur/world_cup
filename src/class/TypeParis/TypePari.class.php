@@ -1,20 +1,20 @@
 <?php
 declare(strict_types = 1);
-namespace TypeParis;
+namespace TypePari;
 
-class TypeParis {
+class TypePari {
     /**
-     * id type paris
+     * id type pari
      *
      * @var int
      */
     private $id;
     /**
-     * type de paris
+     * type de pari
      *
      * @var string
      */
-    private $typeParis;
+    private $typePari;
 
     /**
      * Construct
@@ -23,12 +23,12 @@ class TypeParis {
      */
     public function __construct(array $data) {
         $this->setId((int)$data['id']);
-        $this->setTypeParis((string)$data['typeParis']);
+        $this->setTypePari((string)$data['typePari']);
     }
     
 
     /**
-     * Get id type paris
+     * Get id type pari
      *
      * @return  int
      */ 
@@ -38,9 +38,9 @@ class TypeParis {
     }
 
     /**
-     * Set id type paris
+     * Set id type pari
      *
-     * @param  int  $id  id type paris
+     * @param  int  $id  id type pari
      *
      * @return  self
      */ 
@@ -52,25 +52,25 @@ class TypeParis {
     }
 
     /**
-     * Get type de paris
+     * Get type de pari
      *
      * @return  string
      */ 
-    public function getTypeParis()
+    public function getTypePari()
     {
-        return $this->typeParis;
+        return $this->typePari;
     }
 
     /**
-     * Set type de paris
+     * Set type de pari
      *
-     * @param  string  $typeParis  type de paris
+     * @param  string  $typePari  type de pari
      *
      * @return  self
      */ 
-    public function setTypeParis(string $typeParis)
+    public function setTypePari(string $typePari)
     {
-        $this->typeParis = $typeParis;
+        $this->typePari = $type;
 
         return $this;
     }

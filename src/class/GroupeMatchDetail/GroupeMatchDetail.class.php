@@ -4,7 +4,7 @@ namespace GroupeMatchDetail;
 
 class GroupeMatchDetail {
     /**
-     * id type paris
+     * id type groupe match detail
      *
      * @var int
      */
@@ -44,7 +44,7 @@ class GroupeMatchDetail {
     
 
     /**
-     * Get id type paris
+     * Get id type pari
      *
      * @return  int
      */ 
@@ -54,9 +54,9 @@ class GroupeMatchDetail {
     }
 
     /**
-     * Set id type paris
+     * Set id type pari
      *
-     * @param  int  $id  id type paris
+     * @param  int  $id  id type pari
      *
      * @return  self
      */ 

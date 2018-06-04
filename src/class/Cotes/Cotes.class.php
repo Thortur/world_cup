@@ -51,6 +51,8 @@ class Cotes {
         $this->setIdMatch((int)$data['idMatch']);
         $this->setIdTypePari((int)$data['idTypePari']);
         $this->setIdTeam((int)$data['idTeam']);
+        $this->setIdTeam((int)$data['idTeam']);
+        $this->setCote((float)$data['cote']);
         $this->setDate($data['date']);
     }
 
@@ -119,7 +121,7 @@ class Cotes {
      *
      * @return  self
      */ 
-    public function setIdTypePari(string $idTypePari)
+    public function setIdTypePari(int $idTypePari)
     {
         $this->idTypePari = $idTypePari;
 
@@ -177,7 +179,7 @@ class Cotes {
     /**
      * Get date de la cote
      *
-     * @return  DateTime
+     * @return DateTime
      */ 
     public function getDate()
     {
