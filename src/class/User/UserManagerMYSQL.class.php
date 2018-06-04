@@ -1,8 +1,12 @@
 <?php
 declare(strict_types = 1);
 namespace User;
+use \DateTime;
 use \Connexion\Database;
+use \Cagnotte\CagnotteManagerMYSQL;
+use \Cagnotte\Cagnotte;
 include_once 'User.class.php';
+include_once 'DataUser.class.php';
 
 class UserManagerMYSQL {
 
@@ -34,7 +38,7 @@ class UserManagerMYSQL {
      * Insert user
      *
      * @param User $User
-     * @return void
+     * @return User $User
      */
     public static function insertUser(User $User) {
         $Db = Database::init();
@@ -62,9 +66,10 @@ class UserManagerMYSQL {
                     ),
                 );
         $Db->execStatement($req, $data);
-        unset($req, $data, $User);
-
-        return $Db::$_nbLigne;
+        $User->setId($Db->getLastInsertId());
+        unset($req, $data);
+        
+        return $User;
     }
 
     /**
@@ -177,6 +182,70 @@ class UserManagerMYSQL {
         }
         unset($login, $password);
         
+        return $User;
+    }
+    
+    /**
+     * Test si le login ou le mail est deja utiliser
+     * 
+     * @param User $User
+     * @return bool $error
+     */
+    public static function isLoginOrMailExiste($User) {
+        $Db    = Database::init();
+        $error = true;
+        $req = "SELECT
+                    *
+                FROM user
+                WHERE
+                user.pseudo = :pseudo
+                OR user.mail = :mail";
+        $data = array(
+            ':pseudo' => array(
+                'type'  => 'string',
+                'value' => $User->getPseudo(),
+            ),
+            ':mail' => array(
+                'type'  => 'string',
+                'value' => $User->getMail(),
+            ),
+        );
+        $res = $Db->execStatement($req, $data);
+        if(empty($res) === true) {
+            $error = false;
+        }
+        
+        return $error;
+    }
+
+    /**
+     * Creation de l'utilisateur
+     * 
+     * @param User $User
+     * @return User $User
+     */
+    public static function createUser(User $User) {
+        if(self::isLoginOrMailExiste($User) === false) {
+            $User = self::insertUser($User);
+            $Cagnotte = new Cagnotte(array(
+                'id'      => -1,
+                'idUser'  => $User->getId(),
+                'date'    => new DateTime(),
+                'montant' => 500,
+            ));
+            $Cagnotte = CagnotteManagerMYSQL::insertCagnotte($Cagnotte);
+            var_dump($Cagnotte);
+            var_dump($User);
+            $DataUser = new DataUser(array(
+                'cagnotte' => array($Cagnotte),
+            ));
+
+            $User->setDataUser($DataUser);
+        }
+        else {
+            $User = false;
+        }
+
         return $User;
     }
 }

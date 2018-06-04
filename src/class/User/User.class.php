@@ -41,6 +41,13 @@ class User {
     private $password;
 
     /**
+     * Data user
+     *
+     * @var DataUser
+     */
+    private $dataUser;
+    
+    /**
      * Construct
      * 
      * @param array $data
@@ -57,6 +64,10 @@ class User {
         $this->setPseudo((string)$data['pseudo']);
         $this->setMail((string)$data['mail']);
         $this->setPassword((string)$data['password']);
+        if(empty($data['dataUser']) === true) {
+            $data['dataUser'] = new DataUser(array());
+        }
+        $this->setDataUser($data['dataUser']);
     }
 
     
@@ -203,4 +214,28 @@ class User {
 
         return $this;
     }    
+
+    /**
+     * Get data user
+     *
+     * @return  array
+     */ 
+    public function getDataUser()
+    {
+        return $this->dataUser;
+    }
+
+    /**
+     * Set data user
+     *
+     * @param  DataUser  $dataUser  Data user
+     *
+     * @return  self
+     */ 
+    public function setDataUser(DataUser $dataUser)
+    {
+        $this->dataUser = $dataUser;
+
+        return $this;
+    }
 }

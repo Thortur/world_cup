@@ -125,6 +125,9 @@ class Database {
      * @param bool|int $_lastInsertId
      */
     public function setLastInsertId($lastInsertId) {
+        if(is_numeric($lastInsertId) === true) {
+            $lastInsertId = (int)$lastInsertId;
+        }
         self::$_lastInsertId = $lastInsertId;
     }
 
