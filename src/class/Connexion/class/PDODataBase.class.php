@@ -127,19 +127,30 @@ class PDODataBase extends Database implements iDatabase {
 			self::$_nbLigne = $connect->execute();
 		}
 		else {
+			$connect->execute();
 			self::$_nbLigne = 0;
 		}
 		unset($typeRequete);
 
-		if($connect->errorCode() === '00000') {
-			self::setLastInsertId($this->_connexion->lastInsertId());
-			return $this->returnResultat($connect, $parametres);
-		}
-		else {
-			$dataError = $connect->errorInfo();
-			echo $this->getWarningMsg($req, $dataError);
-			die;
-			return false;
+		switch($connect->errorCode()) {
+			case '00000' :
+				self::setLastInsertId($this->_connexion->lastInsertId());
+				return $this->returnResultat($connect, $parametres);
+				break;
+			case null :
+				$dataError = array(
+								0 => 'Retour de la fonction NULL',
+								1 => '',
+								2 => 'Retourne NULL si aucune opération n\'a été exécutée sur la base de données.',
+							);
+				echo $this->getWarningMsg($req, $dataError);
+				break;
+			default :
+				$dataError = $connect->errorInfo();
+				echo $this->getWarningMsg($req, $dataError);
+				die;
+				return false;
+				break;
 		}
 	}
 
@@ -153,16 +164,26 @@ class PDODataBase extends Database implements iDatabase {
 	public function exec($req, $parametres=null) {
 		$connect = $this->_connexion->query($req);
 		
-		if($this->_connexion->errorCode() === '00000') {
-			self::$_nbLigne = $connect->rowCount();
-			self::setLastInsertId($this->_connexion->lastInsertId());
-			return $this->returnResultat($connect, $parametres);
-		}
-		else {
-			$dataError = $this->_connexion->errorInfo();
-			echo $this->getWarningMsg($req, $dataError);
-			die;
-			return false;
+		switch($this->_connexion->errorCode()) {
+			case '00000' :
+				self::$_nbLigne = $connect->rowCount();
+				self::setLastInsertId($this->_connexion->lastInsertId());
+				return $this->returnResultat($connect, $parametres);
+				break;
+			case null :
+				$dataError = array(
+								0 => 'Retour de la fonction NULL',
+								1 => '',
+								2 => 'Retourne NULL si aucune opération n\'a été exécutée sur la base de données.',
+							);
+				echo $this->getWarningMsg($req, $dataError);
+				break;
+			default :
+				$dataError = $this->_connexion->errorInfo();
+				echo $this->getWarningMsg($req, $dataError);
+				die;
+				return false;
+				break;
 		}
 	}
 
