@@ -20,7 +20,6 @@ class TeamManagerMYSQL {
         $res = $Db->exec($req);
         if(is_array($res) === true && empty($res) === false) {
             foreach($res as $data) {
-                $data['id'] = (int)$data['id'];
                 $listTeam[] = new Team($data);
             }
             unset($data);

@@ -33,6 +33,12 @@ class Match {
      * @var int
      */
     private $idTypeMatch;
+    /**
+     * id du groupe match
+     *
+     * @var int
+     */
+    private $idGroupeMatch;
 
     /**
      * Construct
@@ -45,6 +51,7 @@ class Match {
         $this->setTeamA((int)$data['teamA']);
         $this->setTeamB((int)$data['teamB']);
         $this->setIdTypeMatch((int)$data['idTypeMatch']);
+        $this->setIdGroupeMatch((int)$data['idGroupeMatch']);
     }
 
     /**
@@ -168,6 +175,30 @@ class Match {
     public function setIdTypeMatch(int $idTypeMatch)
     {
         $this->idTypeMatch = $idTypeMatch;
+
+        return $this;
+    }
+
+    /**
+     * Get id du groupe match
+     *
+     * @return  int
+     */ 
+    public function getIdGroupeMatch()
+    {
+        return $this->idGroupeMatch;
+    }
+
+    /**
+     * Set id du groupe match
+     *
+     * @param  int  $idGroupeMatch  id du groupe match
+     *
+     * @return  self
+     */ 
+    public function setIdGroupeMatch(int $idGroupeMatch)
+    {
+        $this->idGroupeMatch = $idGroupeMatch;
 
         return $this;
     }
