@@ -20,6 +20,7 @@ header('Content-Type: text/html; charset=UTF-8');
         <?php require './generale/nav.php'; ?>
         <div id="body">
         <?php
+        echo 'non';
             // for($i = 0; $i <= 100; $i++) {
             //     echo $i.'<br/>';
             // }
