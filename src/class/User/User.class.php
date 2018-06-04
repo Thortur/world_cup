@@ -40,18 +40,23 @@ class User {
      */
     private $password;
 
-    public function __construct($data)
+    /**
+     * Construct
+     * 
+     * @param array $data
+     */
+    public function __construct(array $data)
     {
         if(empty($data['id']) === true) {
             $data['id'] = -1;
         }
         
-        $this->setId($data['id']);
-        $this->setNom($data['nom']);
-        $this->setPrenom($data['prenom']);
-        $this->setPseudo($data['pseudo']);
-        $this->setMail($data['mail']);
-        $this->setPassword($data['password']);
+        $this->setId((int)$data['id']);
+        $this->setNom((string)$data['nom']);
+        $this->setPrenom((string)$data['prenom']);
+        $this->setPseudo((string)$data['pseudo']);
+        $this->setMail((string)$data['mail']);
+        $this->setPassword((string)$data['password']);
     }
 
     
