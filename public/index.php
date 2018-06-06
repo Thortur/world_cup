@@ -24,9 +24,9 @@ echo '<html>';
     echo '<head>';
         echo '<meta charset="UTF-8">';
         echo '<title>Title of the document</title>';
-        echo '<link href="./lib/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">';
-        echo '<link rel="stylesheet" href="./lib/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">';
-        echo '<script type="text/javascript" src="./lib/jquery/jquery-3.3.1.min.js"></script>';
+        echo '<link href="./../src/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">';
+        echo '<link rel="stylesheet" href="./../src/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">';
+        echo '<script type="text/javascript" src="./../src/jquery/jquery-3.3.1.min.js"></script>';
     echo '</head>';
     echo '<body>';
         echo '<div class="container">';
@@ -184,6 +184,6 @@ echo '<html>';
             });
         </script>
         <?php
-        echo '<script type="text/javascript" src="./lib/bootstrap-4.0.0/js/bootstrap.min.js"></script>';
+        echo '<script type="text/javascript" src="./../src/bootstrap-4.0.0/js/bootstrap.min.js"></script>';
     echo '</body>';
 echo '</html>';
