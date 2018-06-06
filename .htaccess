@@ -1,0 +1,2 @@
+RewriteEngine On
+Redirect "/world_cup/index.php" "/world_cup/public/index.php"
