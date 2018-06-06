@@ -2,7 +2,7 @@
 declare (strict_types = 1);
 namespace worldCup;
 header('Content-Type: text/html; charset=UTF-8');
-require_once 'fonctions.php';
+require_once './../app/fonctions.php';
 
 
 if(empty($_POST['modeInscription']) === true) {
@@ -34,7 +34,7 @@ if(empty($_POST['modeInscription']) === true) {
                 'mail'   => $reponse->mail
             )
         );
-        header('Location: home.php');
+        header('Location: ./../app/home.php');
     }
     else {
         header('Location: index.php?error=oui');
@@ -76,7 +76,7 @@ else {
                 'mail'   => $reponse->mail
             )
         );
-        header('Location: home.php');
+        header('Location: ./../app/home.php');
     }
     else {
         header('Location: index.php?inscription=oui&error=oui');
