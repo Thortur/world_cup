@@ -10,6 +10,7 @@ if(empty($_POST['modeInscription']) === true) {
         'pseudo'   => $_POST['pseudo'],
         'password' => $_POST['password'],
     );
+    
     $ch = curl_init();
     curl_setopt_array($ch, array(
                                 CURLOPT_URL            => getUrlData('loginUser'),
@@ -19,6 +20,7 @@ if(empty($_POST['modeInscription']) === true) {
                             ));
     $reponse = curl_exec($ch);
     curl_close($ch);
+    
     if(empty($reponse) === false) {
         $reponse = \json_decode($reponse);
         \session_start();
