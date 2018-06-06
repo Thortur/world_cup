@@ -34,7 +34,7 @@ if(empty($_POST['modeInscription']) === true) {
                 'mail'   => $reponse->mail
             )
         );
-        header('Location: ./../app/home.php');
+        header('Location: ./../app/page/home.php');
     }
     else {
         header('Location: index.php?error=oui');
@@ -76,7 +76,7 @@ else {
                 'mail'   => $reponse->mail
             )
         );
-        header('Location: ./../app/home.php');
+        header('Location: ./../app/page/home.php');
     }
     else {
         header('Location: index.php?inscription=oui&error=oui');
