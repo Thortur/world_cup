@@ -1,2 +1,2 @@
-RewriteEngine On
-Redirect "/index.php" "/public/index.php"
+# RewriteEngine On
+# Redirect "/index.php" "/public/index.php"
