@@ -147,7 +147,7 @@ echo '<html>';
             <?php
         }
 
-        echo '<form action="'.$_SERVER['PHP_SELF'].'" method="POST">';
+        echo '<form action=".'.$_SERVER['PHP_SELF'].'" method="POST">';
             echo '<div class="modal" id="modalPassWord" tabindex="-1" role="dialog">';
                 echo '<div class="modal-dialog" role="document">';
                     echo '<div class="modal-content">';
