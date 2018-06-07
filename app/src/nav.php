@@ -36,11 +36,13 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/app/page/about.php">?</a>
+                <a class="nav-link" href="/app/page/about.php">Help</a>
             </li>
         </ul>
         <div class="form-inline">
-            <button type="submit" class="btn btn-primary" name="deconnexion" >Se déconnecter</button>
+            <form action="/public/index.php" method="POST">
+                <button type="submit" class="btn btn-primary" name="deconnexion" >Se déconnecter</button>
+            </form>
         </div>
         <!-- <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
