@@ -12,11 +12,13 @@ $lienGetLien = '?inscription=oui';
 $labelBtn    = 'Inscription';
 $labelTitle  = 'Connexion';
 $btnAction   = 'Connexion';
+$required    = '';
 if($modeInscription === true) {
     $lienGetLien = null;
     $labelBtn    = 'Connexion';
     $labelTitle  = 'Inscription';                
-    $btnAction   = 'Inscription';                
+    $btnAction   = 'Inscription';
+    $required    = 'required';              
 }
 
 echo '<!DOCTYPE html>';
@@ -45,25 +47,27 @@ echo '<html>';
                             echo '<a href="'.$_SERVER['PHP_SELF'].$lienGetLien.'" class="float-right btn btn-outline-primary">'.$labelBtn.'</a>';
                             echo '<h4 class="card-title mb-4 mt-1">'.$labelTitle.'</h4>';
                             unset($lienGetLien, $labelBtn, $labelTitle);
-                            echo '<form action="./connexion.php" method="POST">';
+                            echo '<form action="./connexion.php" method="POST" class="needs-validation" novalidate>';
                                 echo '<input type="hidden" name="modeInscription" value="'.$modeInscription.'" />';
                                 if($modeInscription === true) {
                                     echo '<div class="form-group">';
                                         echo '<label>Votre nom</label>';
                                         echo '<div class="input-group">';
                                             echo '<div class="input-group-prepend">';
-                                                echo '<span class="input-group-text"> <i class="fa fa-user"></i> </span>';
+                                                echo '<span class="input-group-text" id="inputGroupPrependNom"> <i class="fa fa-user"></i> </span>';
                                             echo '</div>';
-                                            echo '<input name="nom" class="form-control" placeholder="Nom" type="text" />';
+                                            echo '<input name="nom" class="form-control" placeholder="Nom" type="text" '.$required.' aria-describedby="inputGroupPrependNom"/>';
+                                            echo '<div class="invalid-tooltip">Veuillez saisir un nom</div>';
                                         echo '</div>';
                                     echo '</div>';
                                     echo '<div class="form-group">';
                                         echo '<label>Votre prénom</label>';
                                         echo '<div class="input-group">';
                                             echo '<div class="input-group-prepend">';
-                                                echo '<span class="input-group-text"> <i class="fa fa-user"></i> </span>';
+                                                echo '<span class="input-group-text" id="inputGroupPrependPrenom"> <i class="fa fa-user"></i> </span>';
                                             echo '</div>';
-                                            echo '<input name="prenom" class="form-control" placeholder="Prenom" type="text" />';
+                                            echo '<input name="prenom" class="form-control" placeholder="Prenom" type="text" '.$required.' aria-describedby="inputGroupPrependPrenom"/>';
+                                            echo '<div class="invalid-tooltip">Veuillez saisir un prénom</div>';
                                         echo '</div>';
                                     echo '</div>';
                                 }
@@ -71,9 +75,10 @@ echo '<html>';
                                     echo '<label>Votre pseudo</label>';
                                     echo '<div class="input-group">';
                                         echo '<div class="input-group-prepend">';
-                                            echo '<span class="input-group-text"> <i class="fa fa-user"></i> </span>';
+                                            echo '<span class="input-group-text" id="inputGroupPrependPseudo"> <i class="fa fa-user"></i> </span>';
                                         echo '</div>';
-                                        echo '<input name="pseudo" class="form-control" placeholder="Pseudo" type="Pseudo" />';
+                                        echo '<input name="pseudo" class="form-control" placeholder="Pseudo" type="text" '.$required.' aria-describedby="inputGroupPrependPseudo"/>';
+                                        echo '<div class="invalid-tooltip">Veuillez saisir un pseudo</div>';
                                     echo '</div>';
                                 echo '</div>';
                                 if($modeInscription === true) {
@@ -81,9 +86,10 @@ echo '<html>';
                                         echo '<label>Votre e-mail</label>';
                                         echo '<div class="input-group">';
                                             echo '<div class="input-group-prepend">';
-                                                echo '<span class="input-group-text"> <i class="fa fa-at"></i> </span>';
+                                                echo '<span class="input-group-text" id="inputGroupPrependMail"> <i class="fa fa-at"></i> </span>';
                                             echo '</div>';
-                                            echo '<input name="mail" class="form-control" placeholder="E-mail" type="mail" />';
+                                            echo '<input name="mail" class="form-control" placeholder="E-mail" type="mail" '.$required.' aria-describedby="inputGroupPrependMail"/>';
+                                            echo '<div class="invalid-tooltip">Veuillez saisir un e-mail</div>';
                                         echo '</div>';
                                     echo '</div>';
                                 }
@@ -91,26 +97,24 @@ echo '<html>';
                                     echo '<label>Votre mot de passe</label>';
                                     echo '<div class="input-group">';
                                         echo '<div class="input-group-prepend">';
-                                            echo '<span class="input-group-text"> <i class="fa fa-lock"></i> </span>';
+                                            echo '<span class="input-group-text" id="inputGroupPrependPassWord"> <i class="fa fa-lock"></i> </span>';
                                         echo '</div>';
-                                        echo '<input name="password" class="form-control" placeholder="******" type="password"/>';
+                                        echo '<input name="password" class="form-control" placeholder="******" type="password" '.$required.' aria-describedby="inputGroupPrependPassWord"/>';
+                                        echo '<div class="invalid-tooltip">Veuillez saisir un mot de passe</div>';
                                     echo '</div>';
                                     if($modeInscription === false) {
                                         echo '<a class="float-right" href="#" id="lienPassWordforgot">Mot de passe oublié?</a>';
                                     }
                                 echo '</div>';
                                 if($modeInscription === false) {
-                                    // echo '<div class="form-group">';
-                                    //     echo '<div class="checkbox">';
-                                    //         echo '<label> <input type="checkbox"> Save password</label>';
-                                    //     echo '</div>';
-                                    // echo '</div>';
                                     echo '<br/>';
                                 }
                                 else {
                                     echo '<div class="form-group">';
-                                        echo '<div class="checkbox" >';
-                                            echo '<label style="cursor:pointer;"> <input type="checkbox"> En soumettant ce formulaire, j\'accepte que les informations saisies soient exploitées contre mon gré dans le cadre du jeu et de la relation commerciale qui peut en découler.</label>';
+                                        echo '<div class="custom-control custom-checkbox" >';
+                                            echo '<input type="checkbox" class="custom-control-input" id="customControlValidationCheckRGPD" name="checkRGPD" '.$required.'>';
+                                            echo '<label class="custom-control-label" for="customControlValidationCheckRGPD" >En soumettant ce formulaire, j\'accepte que les informations saisies soient exploitées contre mon gré dans le cadre du jeu et de la relation commerciale qui peut en découler.</label>';
+                                            echo '<div class="invalid-tooltip">Veuillez accepter que j\'utilise vos données contre votre gré!</div>';
                                         echo '</div>';
                                     echo '</div>';
                                 }
@@ -219,5 +223,6 @@ echo '<html>';
         </script>
         <?php
         echo '<script type="text/javascript" src="./../src/bootstrap-4.0.0/js/bootstrap.min.js"></script>';
+        echo '<script type="text/javascript" src="./js/index.js"></script>';
     echo '</body>';
 echo '</html>';
