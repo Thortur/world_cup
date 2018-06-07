@@ -1,3 +1,12 @@
+<?php
+$tabNavActive = array(
+    'home'       => null,
+    'bet'        => null,
+    'classement' => null,
+    'groupe'     => null,
+    'about'      => null,
+);
+?>
 <!DOCTYPE html>
 <html>
     <head>
