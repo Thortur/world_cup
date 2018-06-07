@@ -23,7 +23,7 @@ echo '<!DOCTYPE html>';
 echo '<html>';
     echo '<head>';
         echo '<meta charset="UTF-8">';
-        echo '<title>Title of the document</title>';
+        echo '<title>Pari en amis</title>';
         echo '<link href="./../src/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">';
         echo '<link rel="stylesheet" href="./../src/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">';
         echo '<script type="text/javascript" src="./../src/jquery/jquery-3.3.1.min.js"></script>';
@@ -139,11 +139,38 @@ echo '<html>';
                 echo '</div>';
             echo '</div>';
             ?>
-                <script type="text/javascript" >
-                    $(document).ready(function() {
-                        $('#modalError').modal('show');
-                    });
-                </script>
+            <script type="text/javascript" >
+                $(document).ready(function() {
+                    $('#modalError').modal('show');
+                });
+            </script>
+            <?php
+        }
+        if(empty($_GET['confirmMail']) === false) {
+            echo '<div class="modal" id="modalMailConfirm" tabindex="-1" role="dialog">';
+                echo '<div class="modal-dialog" role="document">';
+                    echo '<div class="modal-content">';
+                        echo '<div class="modal-header">';
+                            echo '<h5 class="modal-title">Confirmation de l\'adresse mail</h5>';
+                            echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                echo '<span aria-hidden="true">&times;</span>';
+                            echo '</button>';
+                        echo '</div>';
+                        echo '<div class="modal-body">';
+                            echo '<p>Un mail vient de vous être envoyé pour confimer votre adresse mail.</p>';
+                        echo '</div>';
+                        echo '<div class="modal-footer">';
+                            echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>';
+                        echo '</div>';
+                    echo '</div>';
+                echo '</div>';
+            echo '</div>';
+            ?>
+            <script type="text/javascript" >
+                $(document).ready(function() {
+                    $('#modalMailConfirm').modal('show');
+                });
+            </script>
             <?php
         }
 
@@ -159,14 +186,14 @@ echo '<html>';
                         echo '</div>';
                         echo '<div class="modal-body">';
                             echo '<div class="form-group">';
-                            echo '<label>Votre e-mail</label>';
-                            echo '<div class="input-group">';
-                                echo '<div class="input-group-prepend">';
-                                    echo '<span class="input-group-text"> <i class="fa fa-at"></i> </span>';
+                                echo '<label>Votre e-mail</label>';
+                                echo '<div class="input-group">';
+                                    echo '<div class="input-group-prepend">';
+                                        echo '<span class="input-group-text"> <i class="fa fa-at"></i> </span>';
+                                    echo '</div>';
+                                    echo '<input name="mailForgot" class="form-control" placeholder="E-mail" type="mail" />';
                                 echo '</div>';
-                                echo '<input name="mailForgot" class="form-control" placeholder="E-mail" type="mail" />';
                             echo '</div>';
-                        echo '</div>';
                         echo '</div>';
                         echo '<div class="modal-footer">';
                             echo '<input type="submit" name="btnPassWordForgot" class="btn btn-primary" value="Renvoi moi un mot de passe" />"';

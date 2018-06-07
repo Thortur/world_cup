@@ -1,8 +1,9 @@
 <?php
 declare (strict_types = 1);
 namespace worldCup;
+use \SendRequete\SendRequete;
 header('Content-Type: text/html; charset=UTF-8');
-require_once './../app/fonctions.php';
+require_once './../app/class/SendRequete/SendRequete.class.php';
 
 
 if(empty($_POST['modeInscription']) === true) {
@@ -10,60 +11,44 @@ if(empty($_POST['modeInscription']) === true) {
         'pseudo'   => $_POST['pseudo'],
         'password' => $_POST['password'],
     );
-    
-    $ch = curl_init();
-    curl_setopt_array($ch, array(
-                                CURLOPT_URL            => getUrlData('loginUser'),
-                                CURLOPT_POST           => count($data),
-                                CURLOPT_POSTFIELDS     => http_build_query($data),
-                                CURLOPT_RETURNTRANSFER => true,
-                            ));
-    $reponse = curl_exec($ch);
-    curl_close($ch);
-    
+    $SendRequete = new SendRequete('loginUser', $data);
+    $reponse = $SendRequete->exec();
+var_dump($reponse);
     if(empty($reponse) === false) {
-        $reponse = \json_decode($reponse);
         \session_start();
         if(empty($_SESSION['worldCup']) === false) {
             unset($_SESSION['worldCup']);
         }
         $_SESSION['worldCup'] = array(
             'login' => array(
-                'id'     => $reponse->id,
-                'nom'    => $reponse->nom,
-                'prenom' => $reponse->prenom,
-                'pseudo' => $reponse->pseudo,
-                'mail'   => $reponse->mail
+                'id'          => $reponse->id,
+                'nom'         => $reponse->nom,
+                'prenom'      => $reponse->prenom,
+                'pseudo'      => $reponse->pseudo,
+                'mail'        => $reponse->mail,
+                'mailConfirm' => $reponse->mailConfirm
             )
         );
         header('Location: ./../app/page/home.php');
     }
     else {
-        header('Location: index.php?error=oui');
+        header('Location: ./index.php?error=oui');
     }
 }
 else {
     $data = array(
-        'id'       => -1,
-        'nom'      => $_POST['nom'],
-        'prenom'   => $_POST['prenom'],
-        'pseudo'   => $_POST['pseudo'],
-        'password' => $_POST['password'],
-        'mail'     => $_POST['mail'],
+        'id'          => -1,
+        'nom'         => ucfirst(strtolower($_POST['nom'])),
+        'prenom'      => ucfirst(strtolower($_POST['prenom'])),
+        'pseudo'      => ucfirst(strtolower($_POST['pseudo'])),
+        'password'    => $_POST['password'],
+        'mail'        => $_POST['mail'],
+        'mailConfirm' => false,
     );
+    $SendRequete = new SendRequete('createUser', $data);
+    $reponse = $SendRequete->exec();
     
-    $ch = curl_init();
-    curl_setopt_array($ch, array(
-                                CURLOPT_URL            => getUrlData('createUser'),
-                                CURLOPT_POST           => count($data),
-                                CURLOPT_POSTFIELDS     => http_build_query($data),
-                                CURLOPT_RETURNTRANSFER => true,
-                            ));
-    $reponse = curl_exec($ch);
-    curl_close($ch);
-    echo $reponse;
     if(empty($reponse) === false) {
-        $reponse = \json_decode($reponse);
         \session_start();
         
         if(empty($_SESSION['worldCup']) === false) {
@@ -71,17 +56,18 @@ else {
         }
         $_SESSION['worldCup'] = array(
                 'login' => array(
-                'id'     => $reponse->id,
-                'nom'    => $reponse->nom,
-                'prenom' => $reponse->prenom,
-                'pseudo' => $reponse->pseudo,
-                'mail'   => $reponse->mail
-            )
+                    'id'          => $reponse->id,
+                    'nom'         => $reponse->nom,
+                    'prenom'      => $reponse->prenom,
+                    'pseudo'      => $reponse->pseudo,
+                    'mail'        => $reponse->mail,
+                    'mailConfirm' => $reponse->mailConfirm,
+                )
         );
-        header('Location: ./../app/page/home.php');
+        header('Location: ./index.php?confirmMail=oui');
     }
     else {
-        header('Location: index.php?inscription=oui&error=oui');
+        header('Location: ./index.php?inscription=oui&error=oui');
     }
 }
 
