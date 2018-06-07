@@ -1,5 +1,8 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
+session_start();
+unset($_SESSION);
+session_destroy();
 
 if(empty($_POST['btnPassWordForgot']) === false) {
     $_POST['mailForgot'] = trim($_POST['mailForgot']);
