@@ -4,6 +4,7 @@ namespace worldCup;
 header('Content-Type: text/html; charset=UTF-8');
 
 require_once './../src/header.php';
+$tabNavActive['groupe'] = ' active';
 require_once './../src/nav.php';
 \session_start();
 echo '<pre>';

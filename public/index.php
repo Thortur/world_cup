@@ -28,6 +28,7 @@ echo '<!DOCTYPE html>';
 echo '<html>';
     echo '<head>';
         echo '<meta charset="UTF-8">';
+        // echo '<meta name="viewport" content="width=device-width, maximum-scale=4" >';
         echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
         echo '<title>Pari entre amis</title>';
         echo '<link rel="stylesheet" href="./../src/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">';
