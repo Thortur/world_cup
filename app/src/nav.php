@@ -9,7 +9,7 @@
                 <a class="nav-link<?php echo $tabNavActive['home'];?>" href="/app/page/home.php">Accueil</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/app/page/bet.php" <?php echo $tabNavActive['bet'];?>>Pari</a>
+                <a class="nav-link<?php echo $tabNavActive['bet'];?>" href="/app/page/bet.php">Pari</a>
             </li>
             <li class="nav-item<?php echo $tabNavActive['classement'];?>">
                 <a class="nav-link" href="/app/page/classement.php">Classement</a>
