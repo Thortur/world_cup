@@ -13,7 +13,7 @@ if(empty($_POST['modeInscription']) === true) {
     );
     $SendRequete = new SendRequete('loginUser', $data);
     $reponse = $SendRequete->exec();
-var_dump($reponse);
+    
     if(empty($reponse) === false) {
         \session_start();
         if(empty($_SESSION['worldCup']) === false) {
