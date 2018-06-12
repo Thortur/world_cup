@@ -207,7 +207,7 @@ Horizontal Timeline
     bottom: auto;
     right: auto;
     transform: translateX(-50%) translateY(-50%);
-    background: url(../images/svg/cd-arrow.svg) no-repeat 0 0; }
+    background: url(/app/src/images/svg/cd-arrow.svg) no-repeat 0 0; }
 
 .cd-timeline-navigation a.prev {
   left: 0;
