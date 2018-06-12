@@ -31,28 +31,27 @@ $datas       = $SendRequete->exec();
 $TimeLine    = new TimeLine($datas);
 $tabMatch    = $TimeLine->getTabMatch();
 
-
 function getCardUser () {
     $html = '
     <div class="card profile-card-with-stats">
-        <div class="text-center">
-            <div class="card-body">
-                <img src="/app/src/images/portrait/small/avatar-s-21.png" class="rounded-circle  height-150" alt="Card image">
-            </div>
-            <div class="card-body">
-                <h4 class="card-title">@'.$_SESSION['world_cup']['login']['pseudo'].'</h4>
-                <h3 class="card-title">@Cagnotte</h3>
-            </div>
-            <div class="card-body">
-                <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
-                <button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button>
-            </div>
+      <div class="text-center">
+        <div class="card-body">
+          <img src="/app/src/images/portrait/small/avatar-s-21.png" class="rounded-circle  height-150" alt="Card image">
         </div>
+        <div class="card-body">
+          <h4 class="card-title">@'.$_SESSION['world_cup']['login']['pseudo'].'</h4>
+          <h3 class="card-title">@Cagnotte</h3>
+        </div>
+        <div class="card-body">
+          <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
+          <button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button>
+        </div>
+      </div>
     </div>
-    ';
-
-    return $html;
-    }
+  ';
+  
+  return $html;
+  }
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="fr" data-textdirection="ltr">

@@ -117,58 +117,73 @@ class TimeLine {
     public function getTabMatch() {
         $tabMatch = array();
         $this->setCagnottes(500);
-        if(is_array($this->datas->listTeam)) {
-            foreach($this->datas->listTeam as $k_team => $v_team) {
-                $tabTeam[$v_team->id] = array(
-                    'nom'  => $v_team->nom,
-                    'iso2' => $v_team->iso2,
-                );
-            }
-            unset($k_team, $v_team);
-        }
-        if(is_array($this->datas->listGroupeMatch)) {
-            foreach($this->datas->listGroupeMatch as $k_groupe => $v_groupe) {
-                $tabGroupe[$v_groupe->id] = array(
-                    'nom' => $v_groupe->groupe,
-                );
-            }
-            unset($k_groupe, $v_groupe);
-        }
+        $tabTeam     = array();
+        $tabGroupe   = array();
+        $tabListPari = array();
 
+        if(is_array($this->datas->listTeam) && empty($this->datas->listTeam) === false) {
+            foreach($this->datas->listTeam as $team) {
+                $tabTeam[$team->id] = array(
+                    'nom'  => $team->nom,
+                    'iso2' => $team->iso2,
+                );
+            }
+            unset($team);
+        }
+        if(is_array($this->datas->listGroupeMatch) && empty($this->datas->listGroupeMatch) === false) {
+            foreach($this->datas->listGroupeMatch as $groupeMatch) {
+                $tabGroupe[$groupeMatch->id] = array(
+                    'nom' => $groupeMatch->groupe,
+                );
+            }
+            unset($groupeMatch);
+        }
+        if(is_array($this->datas->listPari) === true && empty($this->datas->listPari) === false) {
+            foreach($this->datas->listPari as $pari) {
+                $tabListPari[$pari->idMatch] = $pari;
+            }
+            unset($pari);
+        }
+        
         if(is_array($this->datas->listMatch)) {
             $datetime = new DateTime();
             foreach($this->datas->listMatch as $k_match => $v_match) {
                 $datetime->add(new DateInterval('P1D'));
 
                 $idMatch = $v_match->id;
-                $idTeamA = $v_match->teamA;
-                $idTeamB = $v_match->teamB;
-                $idTypePari = 1;
-                $coteNul = 0;
 
-                $tab[$idMatch] = array(
-                    'date'       => new DateTime($v_match->date),
-                    'dateFausse' => $datetime->format('d/m/Y'),
-                    'idTeamA'    => $idTeamA,
-                    'equipeA'    => $tabTeam[$idTeamA]['nom'],
-                    'flagA'      => $tabTeam[$idTeamA]['iso2'],
-                    'idTeamB'    => $idTeamB,
-                    'equipeB'    => $tabTeam[$idTeamB]['nom'],
-                    'flagB'      => $tabTeam[$idTeamB]['iso2'],
-                    'typeMatch'  => $tabGroupe[$v_match->idGroupeMatch]['nom'],
-                    'coteA'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->cote,
-                    'idCoteA'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->id,
-                    'coteB'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->cote,
-                    'idCoteB'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->id,
-                    'coteNul'    => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->cote,
-                    'idCoteNull' => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->id,
-                );
+                if(empty($tabListPari) === true || empty($tabListPari[$idMatch]) === true) {
+                    $idTeamA = $v_match->teamA;
+                    $idTeamB = $v_match->teamB;
+                    $idTypePari = 1;
+                    $coteNul = 0;
+    
+                    $tabMatch[$idMatch] = array(
+                        'date'       => new DateTime($v_match->date),
+                        'dateFausse' => $datetime->format('d/m/Y'),
+                        'idTeamA'    => $idTeamA,
+                        'equipeA'    => $tabTeam[$idTeamA]['nom'],
+                        'flagA'      => $tabTeam[$idTeamA]['iso2'],
+                        'idTeamB'    => $idTeamB,
+                        'equipeB'    => $tabTeam[$idTeamB]['nom'],
+                        'flagB'      => $tabTeam[$idTeamB]['iso2'],
+                        'typeMatch'  => $tabGroupe[$v_match->idGroupeMatch]['nom'],
+                        'coteA'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->cote,
+                        'idCoteA'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->id,
+                        'coteB'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->cote,
+                        'idCoteB'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->id,
+                        'coteNul'    => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->cote,
+                        'idCoteNull' => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->id,
+                    );
+                    unset($idTeamA, $idTeamB, $idTypePari, $coteNul);
+                }
 
-                unset($idMatch, $idTeamA, $idTeamB, $idTypePari, $coteNul);
+                unset($idMatch);
             }
+            unset($datetime);
         }
 
-        return $tab;
+        return $tabMatch;
     }
 
     /**
