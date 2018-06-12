@@ -29,7 +29,7 @@ if(empty($_POST['modeInscription']) === true) {
                 'mailConfirm' => $reponse->mailConfirm
             )
         );
-        header('Location: ./../app/page/home.php');
+        header('Location: ./../app/page/home/index.php');
     }
     else {
         header('Location: ./index.php?error=oui');
