@@ -18,7 +18,8 @@ class TimeLine {
         if(is_array($tabMatch)) {
             $selected = ' class="selected"';
             foreach($tabMatch as $k_match => $v_match) {
-                $listMatch .= '<li><a href="#0" data-date="'.$v_match['dateFausse'].'"'.$selected.'><img class="flag" src="flags/4x3/'.$v_match['flagA'].'.svg" style="width:20px;border:1px solid black;margin-right:1px;"><img class="flag" src="flags/4x3/'.$v_match['flagB'].'.svg" style="width:20px;border:1px solid black;"></a></li>';
+                $listMatch .= '<li><a href="#0" data-date="'.$v_match['dateFausse'].'"'.$selected.'><img class="flag" src="/app/src/flags/4x3/'.$v_match['flagA'].'.svg" style="width:20px;border:1px solid black;margin-right:1px;"><img class="flag" src="/app/src/flags/4x3/'.$v_match['flagB'].'.svg" style="width:20px;border:1px solid black;"></a></li>';
+                // $listMatch .= '<li><a href="#0" data-date="'.$v_match['dateFausse'].'"'.$selected.'><img class="flag" src="flags/4x3/'.$v_match['flagA'].'.svg" style="width:20px;border:1px solid black;margin-right:1px;"><img class="flag" src="flags/4x3/'.$v_match['flagB'].'.svg" style="width:20px;border:1px solid black;"></a></li>';
         
                 $listMatchDetail .= '<li'.$selected.' data-date="'.$v_match['dateFausse'].'">';
                 $listMatchDetail .= '<h3>';
