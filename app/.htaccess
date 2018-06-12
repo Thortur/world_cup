@@ -1,2 +1,2 @@
 RewriteEngine On
-Redirect "/app/index.php" "/app/page/home.php"
+Redirect "/app/index.php" "/app/page/home/index.php"
