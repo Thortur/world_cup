@@ -12,9 +12,9 @@ $datas = $SendRequete->exec();
 require_once './../src/header.php';
 $tabNavActive['groupe'] = ' active';
 require_once './../src/nav.php';
-echo '<br/><br/><pre>';
-print_r($datas->listResultat);
-// echo '</pre>';
+echo '<pre>';
+print_r($datas);
+echo '</pre>';
 
 $tabClassementGroupe = array();
 if(is_array($datas->listGroupeMatch) === true && empty($datas->listGroupeMatch) === false && is_array($datas->listGroupeMatchDetail) === true && empty($datas->listGroupeMatchDetail) === false) {
@@ -88,8 +88,56 @@ if(is_array($datas->listGroupeMatch) === true && empty($datas->listGroupeMatch) 
     unset($groupe);
 }
 
+echo '<br/>';
+echo '<br/>';
 echo '<pre>';
 print_r($tabClassementGroupe);
 echo '</pre>';
+if(empty($tabClassementGroupe) === false) {
+    foreach($tabClassementGroupe as $idGroupe => $listTeamGroupe) {
+        if($idGroupe > 1) break;
+//         echo '<pre>';
+// print_r($listTeamGroupe);
+// echo '</pre>';
+        // echo '<pre>'.print_r($listTeamGroupe, true).'</pre>';
+        if(is_array($listTeamGroupe) === true && empty($listTeamGroupe) === false) {
+            $ordreTeam = array_keys($listTeamGroupe);
+            // $ordreTeam = array();
+            foreach($listTeamGroupe as $idTeam => $resultatPoule) {
+                if(empty($ordreTeam) === false) {
+                    $newOrdreTeam = array();
+                    foreach($ordreTeam as $ordre => $idTeamTemp) {
+                        $ordreTeam[$ordre] = $idTeamTemp;
+                        if($resultatPoule['points'] > $listTeamGroupe[$idTeamTemp]['points']) {
+                            $ordreTeam[$ordre] = $idTeam;
+                            $ordreTeam[$ordre+1] = $idTeamTemp;
+                        }
+                        else if($resultatPoule['points'] === $listTeamGroupe[$idTeamTemp]['points']) {
+                            if($resultatPoule['gagne'] > $listTeamGroupe[$idTeamTemp]['gagne']) {
+                                // $ordreTeam[] = $idTeam;
+                            }
+                            else {
+                                // $ordreTeam[] = $idTeam;
+                            }
+                        }
+                        else {
+                            // $ordreTeam[] = $idTeam;
+                        }
+                    }
+                    unset($ordre, $idTeamTemp);
+                }
+                else {
+                    $ordreTeam[] = $idTeam;
+                }
+            }
+            unset($idTeam, $resultatPoule);
+            // echo '<pre>'.print_r($newOrdreTeam, true).'</pre>';
+            echo '<pre>'.print_r($ordreTeam, true).'</pre>';
+        }
+        // $ordreTeam[]
+        
+    }
+    unset($idGroupe, $listTeamGroupe);
+}
 
 require_once './../src/footer.php';
