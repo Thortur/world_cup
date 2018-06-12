@@ -9,6 +9,23 @@ header('Content-Type: text/html; charset=UTF-8');
 require_once './../../class/SendRequete/SendRequete.class.php';
 require_once './class/TimeLine.class.php';
 
+if(empty($_POST) === false) {
+    echo '<br/<br/><br/><br/><br/>';
+    if(empty($_POST['btnVaildPari']) === false && empty($_POST['pari']) === false) {
+        $dateNow = new DateTime();
+        $SendRequete = new SendRequete('insertPari', array(
+            'idMatch'    => (int)$_POST['pari']['match'],
+            'idTypePari' => (int)$_POST['pari']['type'],
+            'idUser'     => (int)$_SESSION['worldCup']['login']['id'],
+            'idCotes'    => (int)$_POST['pari']['cote'],
+            'montant'    => (float)$_POST['pari']['montant'],
+            'date'       => $dateNow->format('Y-m-d H:i:s'),
+        ));
+        $datas = $SendRequete->exec();
+    }
+    
+}
+
 $SendRequete = new SendRequete('loadDataPageDashBoard', array());
 $datas       = $SendRequete->exec();
 $TimeLine    = new TimeLine($datas);
@@ -31,27 +48,30 @@ $tabMatch    = $TimeLine->getTabMatch();
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
     </head>
-    <body>
+    <body class="horizontal-layout horizontal-menu 2-columns" data-open="hover" data-menu="horizontal-menu" data-col="2-columns">
         <?php require_once "./../../src/nav.php"; ?>
-        <div class="app-content content">
-            <div class="content-wrapper">
-                <div class="content-body">
-                    <div class="row match-height">
-                        <div class="col-xl-8 col-lg-12">
-                        <?php
-                            echo $TimeLine->getCardParis($tabMatch);
-                        ?>
-                        </div>
-                        <div class="col-xl-4 col-lg-12">
-                        <?php
-                        // echo getCardParis($tabMatch);
-                        ?>
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <div class="app-content content">
+                <div class="content-wrapper">
+                    <div class="content-body">
+                        <div class="row match-height">
+                            <div class="col-xl-8 col-lg-12">
+                            <?php
+                                echo $TimeLine->getCardParis($tabMatch);
+                            ?>
+                            </div>
+                            <div class="col-xl-4 col-lg-12">
+                            <?php
+                            // echo getCardParis($tabMatch);
+                            ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <script src="./js/vendors.min.js" type="text/javascript"></script>
-        <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
+            <script src="./js/vendors.min.js" type="text/javascript"></script>
+            <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
+            <script src="./js/home.js" type="text/javascript"></script>
+        </form>
     </body>
 </html>
