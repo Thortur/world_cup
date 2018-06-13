@@ -8,8 +8,8 @@ require_once './../app/class/SendRequete/SendRequete.class.php';
 
 if(empty($_POST['modeInscription']) === true) {
     $data = array(
-        'pseudo'   => $_POST['pseudo'],
-        'password' => $_POST['password'],
+        'pseudo'   => (string)$_POST['pseudo'],
+        'password' => (string)$_POST['password'],
     );
     $SendRequete = new SendRequete('loginUser', $data);
     $reponse = $SendRequete->exec();
@@ -25,10 +25,12 @@ if(empty($_POST['modeInscription']) === true) {
                 'nom'         => $reponse->nom,
                 'prenom'      => $reponse->prenom,
                 'pseudo'      => $reponse->pseudo,
+                'avatar'      => $reponse->avatar,
                 'mail'        => $reponse->mail,
                 'mailConfirm' => $reponse->mailConfirm
             )
         );
+        
         header('Location: ./../app/page/home/index.php');
     }
     else {
@@ -38,33 +40,41 @@ if(empty($_POST['modeInscription']) === true) {
 else {
     $data = array(
         'id'          => -1,
-        'nom'         => ucfirst(strtolower($_POST['nom'])),
-        'prenom'      => ucfirst(strtolower($_POST['prenom'])),
-        'pseudo'      => ucfirst(strtolower($_POST['pseudo'])),
-        'password'    => $_POST['password'],
-        'mail'        => $_POST['mail'],
+        'nom'         => ucfirst(strtolower((string)$_POST['nom'])),
+        'prenom'      => ucfirst(strtolower((string)$_POST['prenom'])),
+        'pseudo'      => ucfirst(strtolower((string)$_POST['pseudo'])),
+        'avatar'      => (int)$_POST['avatar'],
+        'password'    => (string)$_POST['password'],
+        'mail'        => (string)$_POST['mail'],
         'mailConfirm' => false,
     );
-    $SendRequete = new SendRequete('createUser', $data);
-    $reponse = $SendRequete->exec();
     
-    if(empty($reponse) === false) {
-        \session_start();
+    if (filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+        $SendRequete = new SendRequete('createUser', $data);
+        $reponse = $SendRequete->exec();
         
-        if(empty($_SESSION['worldCup']) === false) {
-            unset($_SESSION['worldCup']);
+        if(empty($reponse) === false) {
+            \session_start();
+            
+            if(empty($_SESSION['worldCup']) === false) {
+                unset($_SESSION['worldCup']);
+            }
+            $_SESSION['worldCup'] = array(
+                    'login' => array(
+                        'id'          => $reponse->id,
+                        'nom'         => $reponse->nom,
+                        'prenom'      => $reponse->prenom,
+                        'pseudo'      => $reponse->pseudo,
+                        'avatar'      => $reponse->avatar,
+                        'mail'        => $reponse->mail,
+                        'mailConfirm' => $reponse->mailConfirm,
+                    )
+            );
+            header('Location: ./index.php?confirmMail=oui');
         }
-        $_SESSION['worldCup'] = array(
-                'login' => array(
-                    'id'          => $reponse->id,
-                    'nom'         => $reponse->nom,
-                    'prenom'      => $reponse->prenom,
-                    'pseudo'      => $reponse->pseudo,
-                    'mail'        => $reponse->mail,
-                    'mailConfirm' => $reponse->mailConfirm,
-                )
-        );
-        header('Location: ./index.php?confirmMail=oui');
+        else {
+            header('Location: ./index.php?inscription=oui&error=oui');
+        }
     }
     else {
         header('Location: ./index.php?inscription=oui&error=oui');

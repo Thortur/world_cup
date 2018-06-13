@@ -1,2 +1,7 @@
 body{background-color: #e8e8e8}
 #logoWorldCup {margin:20px auto 30px auto;display:block;min-width: 200px;width:25%;}
+.labelProtrait{display:block;cursor:pointer;border-radius:32px;border:1px solid white;margin:5px}
+.labelProtrait>input{display:none;}
+.labelProtrait>img{border-radius:32px;}
+.labelProtrait:hover{border:1px solid #848484;}
+.labelProtraitChecked{border:1px solid #aaaaaa;}

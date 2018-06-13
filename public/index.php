@@ -79,7 +79,7 @@ echo '<html>';
                                     echo '<label>Votre pseudo</label>';
                                     echo '<div class="input-group">';
                                         echo '<div class="input-group-prepend">';
-                                            echo '<span class="input-group-text" id="inputGroupPrependPseudo"> <i class="fa fa-user"></i> </span>';
+                                            echo '<span class="input-group-text" id="inputGroupPrependPseudo"> <i class="fa fa-user-ninja"></i> </span>';
                                         echo '</div>';
                                         echo '<input name="pseudo" class="form-control" placeholder="Pseudo" type="text" '.$required.' aria-describedby="inputGroupPrependPseudo"/>';
                                         echo '<div class="invalid-tooltip">Veuillez saisir un pseudo</div>';
@@ -87,12 +87,28 @@ echo '<html>';
                                 echo '</div>';
                                 if($modeInscription === true) {
                                     echo '<div class="form-group">';
+                                        echo '<label>Votre avatar</label>';
+                                        echo '<div class="input-group">';
+                                        $labelProtraitChecked = ' labelProtraitChecked';
+                                        $checked = ' checked';
+                                            for($i = 1; $i <= 8; $i++) {
+                                                echo '<label for="portrait_'.$i.'" class="labelProtrait'.$labelProtraitChecked.'">';
+                                                    echo '<input type="radio" name="avatar" id="portrait_'.$i.'" value="'.$i.'" '.$required.' '.$checked.'/>';
+                                                    echo '<img src="/src/images/portrait/dessin/'.$i.'.png"/>';
+                                                echo '</label>';
+                                                $labelProtraitChecked = $checked = '';
+                                            }
+                                            unset($labelProtraitChecked);
+                                            echo '<div class="invalid-tooltip">Veuillez choisir un avatar</div>';
+                                        echo '</div>';
+                                    echo '</div>';
+                                    echo '<div class="form-group">';
                                         echo '<label>Votre e-mail</label>';
                                         echo '<div class="input-group">';
                                             echo '<div class="input-group-prepend">';
                                                 echo '<span class="input-group-text" id="inputGroupPrependMail"> <i class="fa fa-at"></i> </span>';
                                             echo '</div>';
-                                            echo '<input name="mail" class="form-control" placeholder="E-mail" type="mail" '.$required.' aria-describedby="inputGroupPrependMail"/>';
+                                            echo '<input name="mail" class="form-control" placeholder="E-mail" type="email" '.$required.' aria-describedby="inputGroupPrependMail"/>';
                                             echo '<div class="invalid-tooltip">Veuillez saisir un e-mail</div>';
                                         echo '</div>';
                                     echo '</div>';

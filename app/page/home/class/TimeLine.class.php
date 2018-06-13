@@ -59,6 +59,9 @@ class TimeLine {
         }
     
         $html = '<div class="card text-center">';
+            $html .= '<div class="card-header card-head-inverse bg-blue">';
+                $html .= '<h4 class="card-title">Vos prochains paris</h4>';
+            $html .= '</div>';
             $html .= '<div class="card-content">';
                 $html .= '<div class="card-body">';
                     $html .= '<div class="card-text">';

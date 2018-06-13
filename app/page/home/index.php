@@ -5,8 +5,8 @@ use \DateTime;
 use \DateInterval;
 \session_start();
 
-if(empty($_SESSION) === true || empty($_SESSION['worldCup']) === true || empty($_SESSION['worldCup']['login']) === false || empty($_SESSION['worldCup']['login']['id']) === false) {
-    // header('Location: /public/index.php');
+if(empty($_SESSION) === true || empty($_SESSION['worldCup']) === true || empty($_SESSION['worldCup']['login']) === true || empty($_SESSION['worldCup']['login']['id']) === true) {
+    header('Location: /public/index.php');
 }
 
 header('Content-Type: text/html; charset=UTF-8');
@@ -32,7 +32,10 @@ $SendRequete = new SendRequete('loadDataPageDashBoard', array());
 $datas       = $SendRequete->exec();
 
 $idUser = $_SESSION['worldCup']['login']['id'];
-$cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUser);
+if(is_array($datas->listCagnotte->$idUser) === true && empty($datas->listCagnotte->$idUser) === false) {
+    $cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUser);
+}
+unset($idUser);
 
 $TimeLine = new TimeLine($datas, $cagnotteRestante);
 $tabMatch = $TimeLine->getTabMatch();
@@ -51,15 +54,45 @@ function getCagnottesUser(array $listCagnotte) {
     return $montant;
 }
 function getCardUser($cagnotteRestante) {
-    $html = '
-    <div class="card profile-card-with-stats">
-        <div class="text-center">
-            <div class="card-body">
-                <img src="images/portrait/dessin/'.rand(1,8).'.png" class="rounded-circle  height-64" alt="Card image">
+    $html = '<div class="card text-center profile-card-with-stats">';
+        $html .= '<div class="card-header card-head-inverse bg-blue">';
+            $html .= '<h4 class="card-title">Votre profil</h4>';
+        $html .= '</div>';
+        $html .= '<div class="text-center">
+            <div class="card-profile-image">
+                <img src="/src/images/portrait/dessin/'.rand(1,8).'.png" class="rounded-circle img-border box-shadow-1 mt-3" alt="Card image">
             </div>
             <div class="card-body">
-                <h4 class="card-title">'.$_SESSION['worldCup']['login']['pseudo'].'</h4>
-                <h3 class="card-title">'.$cagnotteRestante.' €</h3>
+                <h4 class="card-title">@'.$_SESSION['worldCup']['login']['pseudo'].'</h4>
+                <ul class="list-inline list-inline-pipe">
+                    <li>Groupe1</li>
+                    <li>Misterbooking</li>
+                    <li>Groupe3</li>
+                </ul>
+                <h6 class="card-subtitle text-muted">'.$cagnotteRestante.' €</h6>
+            </div>
+            <div class="btn-group" role="group" aria-label="Profile example">
+                <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
+                title="Nombre de paris réussis">
+                    <span class="ladda-label"><i class="fa fa-bar-chart"></i>
+                        <span>4/4</span>
+                    </span>
+                    <span class="ladda-spinner"></span>
+                </button>
+                <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
+                title="Plus grande côte misée">
+                    <span class="ladda-label"><i class="fa fa-trophy"></i>
+                        <span>500</span>
+                    </span>
+                    <span class="ladda-spinner"></span>
+                </button>
+                <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
+                title="Plus grande somme gagnée sur un pari">
+                    <span class="ladda-label"><i class="fa fa-money"></i>
+                        <span>150</span>
+                    </span>
+                    <span class="ladda-spinner"></span>
+                </button>
             </div>
             <div class="card-body">
                 <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
@@ -79,14 +112,15 @@ function getCardUser($cagnotteRestante) {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
         <link rel="stylesheet" type="text/css" href="/src/bootstrap-4.0.0/css/bootstrap.min.css" id="bootstrap-css">
-        <link rel="stylesheet" type="text/css" href="/src/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
         <link rel="stylesheet" type="text/css" href="/app/src/css/flag-icon.min.css">
         <link rel="stylesheet" type="text/css" href="/app/src/css/feather.min.css">
+        <link rel="stylesheet" type="text/css" href="/app/src/fonts/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="./css/pace.css">
         <link rel="stylesheet" type="text/css" href="./css/timeline.css">
         <link rel="stylesheet" type="text/css" href="./css/bootstrap-extended.css">
         <link rel="stylesheet" type="text/css" href="./css/colors.css">
         <link rel="stylesheet" type="text/css" href="./css/components.css">
+        <link rel="stylesheet" type="text/css" href="./css/users.css">
         <link rel="stylesheet" type="text/css" href="/app/src/css/nav.css">
         <link rel="stylesheet" type="text/css" href="./css/home.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
@@ -110,14 +144,37 @@ function getCardUser($cagnotteRestante) {
                             ?>
                             </div>
                         </div>
+                        <div class="row match-height">
+                            <div class="col-xl-4 col-lg-12">
+                            <?php
+                            echo getCardUser($cagnotteRestante);
+                            ?>
+                            </div>
+                            <div class="col-xl-4 col-lg-12">
+                            <?php
+                            echo getCardUser($cagnotteRestante);
+                            ?>
+                            </div>
+                            <div class="col-xl-4 col-lg-12">
+                            <?php
+                            echo getCardUser($cagnotteRestante);
+                            ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <script src="./js/vendors.min.js" type="text/javascript"></script>
-            <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
-            <script src="./js/app-menu.js" type="text/javascript"></script>
-            <script src="./js/app.js" type="text/javascript"></script>
-            <script src="./js/home.js" type="text/javascript"></script>
         </form>
+        <footer class="footer footer-static footer-light navbar-border">
+            <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+            <span class="float-md-left d-block d-md-inline-block">Copyright &copy; 2018 <a class="text-bold-800 grey darken-2" href="#">CHRISTOPHE</a>, All rights reserved. </span>
+            <span class="float-md-right d-block d-md-inline-block d-none d-lg-block">Fait avec <i class="ft-heart pink"></i></span>
+            </p>
+        </footer>
+        <script src="./js/vendors.min.js" type="text/javascript"></script>
+        <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
+        <script src="./js/app-menu.js" type="text/javascript"></script>
+        <script src="./js/app.js" type="text/javascript"></script>
+        <script src="./js/home.js" type="text/javascript"></script>
     </body>
 </html>

@@ -15,3 +15,11 @@
         });
     }, false);
 })();
+
+
+$(document).ready(function(){
+    $(document).on('click', '.labelProtrait', function() {
+        $(document).find('.labelProtrait').removeClass('labelProtraitChecked');
+        $(this).addClass('labelProtraitChecked');
+    });
+});
