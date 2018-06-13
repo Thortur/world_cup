@@ -6,7 +6,7 @@ $(document).ready(function() {
         })
         .on('click', '.btnChoixPari', function() {
             let cote = $(this).data('cote'),
-                data = $(this).closest('.row').data(),
+                data = $(this).closest('#listBtnGoPari').data(),
                 modal = $(document).find('#modalPari');
             modal.find('.modal-title').html(data.nomTeamA+' - '+data.nomTeamB);
             modal.find('#montantPari').val('');

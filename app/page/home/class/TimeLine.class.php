@@ -7,6 +7,12 @@ use \DateInterval;
 
 class TimeLine {
     /**
+     * id user connecter
+     *
+     * @var int $idUserConnecter
+     */
+    private $idUserConnecter;
+    /**
      * List des datas
      * @var array $datas
      */
@@ -17,15 +23,16 @@ class TimeLine {
      */
     private $cagnottes;
 
-    public function __construct($datas, $cagnotteRestante) {
-        $this->setDatas($datas);
-        $this->setCagnottes($cagnotteRestante);
+    public function __construct($idUserConnecter, $datas, $cagnotteRestante) {
+        $this->setIdUserConnecter((int)$idUserConnecter);
+        $this->setDatas((object) $datas);
+        $this->setCagnottes((float) $cagnotteRestante);
     }
 
-    public function getCardParis($tabMatch) {
+    public function getCardParis(array $tabMatch) {
         $listMatch = '';
         $listMatchDetail = '';
-        if(is_array($tabMatch)) {
+        if(is_array($tabMatch) === true) {
             $selected = ' class="selected"';
             foreach($tabMatch as $k_match => $v_match) {
                 $listMatch .= '<li><a href="#0" data-date="'.$v_match['dateFausse'].'"'.$selected.'><img class="flag" src="/app/src/flags/4x3/'.$v_match['flagA'].'.svg" style="width:20px;border:1px solid black;margin-right:1px;"><img class="flag" src="/app/src/flags/4x3/'.$v_match['flagB'].'.svg" style="width:20px;border:1px solid black;"></a></li>';
@@ -37,7 +44,7 @@ class TimeLine {
                         $listMatchDetail .= $v_match['equipeB'];
                     $listMatchDetail .= '</h3>';
                     $listMatchDetail .= '<h4 class="text-muted mb-1"><em>'.$v_match['typeMatch'].' - '.$v_match['date']->format('d/m/Y H:i').'</em></h4>';
-                    $listMatchDetail .= '<div id="listBtnGoPari">';
+                    $listMatchDetail .= '<div id="listBtnGoPari" data-type-pari="1" data-match="'.$k_match.'" data-nom-team-a="'.$v_match['equipeA'].'" data-nom-team-b="'.$v_match['equipeB'].'">';
                         $listMatchDetail .= '<div class="item">';
                             $listMatchDetail .= '<h5>'.$v_match['equipeA'].'</h5>';
                             $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-info btnChoixPari" data-cote="'.$v_match['idCoteA'].'" >'.$v_match['coteA'].'</button>';
@@ -150,7 +157,9 @@ class TimeLine {
         }
         if(is_array($this->datas->listPari) === true && empty($this->datas->listPari) === false) {
             foreach($this->datas->listPari as $pari) {
-                $tabListPari[$pari->idMatch] = $pari;
+                if($pari->idUser === $this->getIdUserConnecter()) {
+                    $tabListPari[$pari->idMatch] = $pari;
+                }
             }
             unset($pari);
         }
@@ -178,12 +187,12 @@ class TimeLine {
                         'equipeB'    => $tabTeam[$idTeamB]['nom'],
                         'flagB'      => $tabTeam[$idTeamB]['iso2'],
                         'typeMatch'  => $tabGroupe[$v_match->idGroupeMatch]['nom'],
-                        'coteA'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->cote,
-                        'idCoteA'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamA->id,
-                        'coteB'      => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->cote,
-                        'idCoteB'    => $this->datas->listCotes->$idMatch->$idTypePari->$idTeamB->id,
-                        'coteNul'    => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->cote,
-                        'idCoteNull' => $this->datas->listCotes->$idMatch->$idTypePari->$coteNul->id,
+                        'coteA'      => $this->datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->cote,
+                        'idCoteA'    => $this->datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->id,
+                        'coteB'      => $this->datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->cote,
+                        'idCoteB'    => $this->datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->id,
+                        'coteNul'    => $this->datas->listCotesLast->$idMatch->$idTypePari->$coteNul->cote,
+                        'idCoteNull' => $this->datas->listCotesLast->$idMatch->$idTypePari->$coteNul->id,
                     );
                     unset($idTeamA, $idTeamB, $idTypePari, $coteNul);
                 }
@@ -194,6 +203,30 @@ class TimeLine {
         }
 
         return $tabMatch;
+    }
+
+    /**
+     * Get $idUserConnecter
+     *
+     * @return  int
+     */ 
+    public function getIdUserConnecter()
+    {
+        return $this->idUserConnecter;
+    }
+
+    /**
+     * Set $idUserConnecter
+     *
+     * @param  int  $idUserConnecter  $idUserConnecter
+     *
+     * @return  self
+     */ 
+    public function setIdUserConnecter(int $idUserConnecter)
+    {
+        $this->idUserConnecter = $idUserConnecter;
+
+        return $this;
     }
 
     /**
@@ -208,7 +241,7 @@ class TimeLine {
      *
      * @return  self
      */ 
-    public function setDatas($datas) {
+    public function setDatas(object $datas) {
         $this->datas = $datas;
 
         return $this;
@@ -238,6 +271,3 @@ class TimeLine {
         return $this;
     }
 }
-
-
-?>
