@@ -5,6 +5,10 @@ use \DateTime;
 use \DateInterval;
 \session_start();
 
+if(empty($_SESSION) === true || empty($_SESSION['worldCup']) === true || empty($_SESSION['worldCup']['login']) === false || empty($_SESSION['worldCup']['login']['id']) === false) {
+    // header('Location: /public/index.php');
+}
+
 header('Content-Type: text/html; charset=UTF-8');
 require_once './../../class/SendRequete/SendRequete.class.php';
 require_once './class/TimeLine.class.php';
@@ -51,7 +55,7 @@ function getCardUser($cagnotteRestante) {
     <div class="card profile-card-with-stats">
         <div class="text-center">
             <div class="card-body">
-                <img src="/app/src/images/portrait/small/avatar-s-21.png" class="rounded-circle  height-150" alt="Card image">
+                <img src="images/portrait/dessin/'.rand(1,8).'.png" class="rounded-circle  height-64" alt="Card image">
             </div>
             <div class="card-body">
                 <h4 class="card-title">'.$_SESSION['worldCup']['login']['pseudo'].'</h4>
