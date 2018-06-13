@@ -31,16 +31,15 @@ if(empty($_POST) === false) {
 $SendRequete = new SendRequete('loadDataPageDashBoard', array());
 $datas       = $SendRequete->exec();
 
-$idUser = $_SESSION['worldCup']['login']['id'];
-if(is_array($datas->listCagnotte->$idUser) === true && empty($datas->listCagnotte->$idUser) === false) {
-    $cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUser);
+
+$idUserConnecter = $_SESSION['worldCup']['login']['id'];
+if(is_array($datas->listCagnotte->$idUserConnecter) === true && empty($datas->listCagnotte->$idUserConnecter) === false) {
+    $cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUserConnecter);
 }
-unset($idUser);
+unset($idUserConnecter);
 
-$TimeLine = new TimeLine($datas, $cagnotteRestante);
+$TimeLine = new TimeLine($_SESSION['worldCup']['login']['id'], $datas, $cagnotteRestante);
 $tabMatch = $TimeLine->getTabMatch();
-
-
 
 function getCagnottesUser(array $listCagnotte) {
     $montant = 0;
@@ -53,14 +52,14 @@ function getCagnottesUser(array $listCagnotte) {
 
     return $montant;
 }
-function getCardUser($cagnotteRestante) {
+function getCardUser(float $cagnotteRestante) {
     $html = '<div class="card text-center profile-card-with-stats">';
         $html .= '<div class="card-header card-head-inverse bg-blue">';
             $html .= '<h4 class="card-title">Votre profil</h4>';
         $html .= '</div>';
         $html .= '<div class="text-center">
             <div class="card-profile-image">
-                <img src="/src/images/portrait/dessin/'.rand(1,8).'.png" class="rounded-circle img-border box-shadow-1 mt-3" alt="Card image">
+                <img src="/src/images/portrait/dessin/'.$_SESSION['worldCup']['login']['avatar'].'.png" class="rounded-circle img-border box-shadow-1 mt-3" alt="Card image">
             </div>
             <div class="card-body">
                 <h4 class="card-title">@'.$_SESSION['worldCup']['login']['pseudo'].'</h4>
@@ -104,6 +103,109 @@ function getCardUser($cagnotteRestante) {
 
     return $html;
 }
+function getCardHistoParis(object $datas) {
+    // echo '<pre>'.print_r($datas->listCotesHisto,true).'</pre>';
+    // echo '<pre>'.print_r($tabMatch,true).'</pre>';
+
+    if(is_array($datas->listTeam) && empty($datas->listTeam) === false) {
+        foreach($datas->listTeam as $team) {
+            $tabTeam[$team->id] = array(
+                'nom'  => $team->nom,
+                'iso2' => $team->iso2,
+            );
+        }
+        unset($team);
+    }
+
+    if(is_array($datas->listMatch) && empty($datas->listMatch) === false) {
+        foreach($datas->listMatch as $v_match) {
+            $idMatch = $v_match->id;
+            $idTeamA = $v_match->teamA;
+            $idTeamB = $v_match->teamB;
+            $idTypePari = 1;
+            $coteNul = 0;
+
+            $tabMatch[$idMatch] = array(
+                'date'       => new DateTime($v_match->date),
+                'idTeamA'    => $idTeamA,
+                'equipeA'    => $tabTeam[$idTeamA]['nom'],
+                'flagA'      => $tabTeam[$idTeamA]['iso2'],
+                'idTeamB'    => $idTeamB,
+                'equipeB'    => $tabTeam[$idTeamB]['nom'],
+                'flagB'      => $tabTeam[$idTeamB]['iso2'],
+                'typeMatch'  => $tabGroupe[$v_match->idGroupeMatch]['nom'],
+                'coteA'      => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->cote,
+                'idCoteA'    => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->id,
+                'coteB'      => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->cote,
+                'idCoteB'    => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->id,
+                'coteNul'    => $datas->listCotesLast->$idMatch->$idTypePari->$coteNul->cote,
+                'idCoteNull' => $datas->listCotesLast->$idMatch->$idTypePari->$coteNul->id,
+            );
+            unset($idTeamA, $idTeamB, $idTypePari, $coteNul);
+            unset($idMatch);
+        }
+    }
+
+    unset($tabHistoPari);
+    if(is_array($datas->listPari)) {
+        foreach($datas->listPari as $k_pari => $v_pari) {
+            if($v_pari->idUser === $_SESSION['worldCup']['login']['id']) {
+                $tabHistoPari[$v_pari->id] = $v_pari;
+            }
+        }
+    }
+    // echo '<pre>'.print_r($tabHistoPari,true).'</pre>';
+
+    $html = '<div class="card">';
+        $html .= '<div class="card-header card-head-inverse bg-blue"">';
+            $html .= '<h4 class="card-title">VOS PARIS REALISES</h4>';
+        $html .= '</div>';
+        $html .= '<div class="card-content collapse show">';
+            $html .= '<div class="card-body card-dashboard">';
+                $html .= '<table class="table table-striped table-bordered base-style">';
+                    $html .= '<thead>';
+                        $html .= '<tr>';
+                            $html .= '<th>Match</th>';
+                            $html .= '<th>Mise</th>';
+                            $html .= '<th>Choix</th>';
+                            $html .= '<th>Cote</th>';
+                            $html .= '<th>Résultat</th>';
+                            $html .= '<th>Date</th>';
+                        $html .= '</tr>';
+                    $html .= '</thead>';
+                    $html .= '<tbody>';
+                        if(is_array($tabHistoPari)) {
+                            foreach($tabHistoPari as $k_pari => $v_pari) {
+                                $idCote = $v_pari->idCotes;
+                                $html .= '<tr>';
+                                    $html .= '<td>'.$tabMatch[$v_pari->idMatch]['equipeA'].' - '.$tabMatch[$v_pari->idMatch]['equipeB'].'</td>';
+                                    $html .= '<td>'.$v_pari->montant.'</td>';
+                                    $html .= '<td><img class="flag" src="/app/src/flags/4x3/'.$tabTeam[$datas->listCotesHisto->$idCote->idTeam]['iso2'].'.svg" style="width:20px;border:1px solid black;margin-right:1px;"></td>';
+                                    $html .= '<td>'.number_format($datas->listCotesHisto->$idCote->cote,2,'.','').'</td>';
+                                    $html .= '<td>'.$v_pari->gain.'</td>';
+                                    $html .= '<td>'.$v_pari->date.'</td>';
+                                $html .= '</tr>';
+                            }
+                        }
+                    $html .= '</tbody>';
+                       $html .= '<tfoot>';
+                        $html .= '<tr>';
+                            $html .= '<th>Match</th>';
+                            $html .= '<th>Mise</th>';
+                            $html .= '<th>Choix</th>';
+                            $html .= '<th>Cote</th>';
+                            $html .= '<th>Résultat</th>';
+                            $html .= '<th>Date</th>';
+                        $html .= '</tr>';
+                    $html .= '</tfoot>';
+                $html .= '</table>';
+            $html .= '</div>';
+        $html .= '</div>';
+    $html .= '</div>';
+
+    return $html;
+}
+
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="fr" data-textdirection="ltr">
@@ -123,10 +225,11 @@ function getCardUser($cagnotteRestante) {
         <link rel="stylesheet" type="text/css" href="./css/users.css">
         <link rel="stylesheet" type="text/css" href="/app/src/css/nav.css">
         <link rel="stylesheet" type="text/css" href="./css/home.css">
+        <link rel="stylesheet" type="text/css" href="./css/datatables.min.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
     </head>
-    <body class"2-columns">
+    <body class="2-columns">
         <?php require_once "./../../src/nav.php"; ?>
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
             <div class="app-content content">
@@ -150,14 +253,9 @@ function getCardUser($cagnotteRestante) {
                             echo getCardUser($cagnotteRestante);
                             ?>
                             </div>
-                            <div class="col-xl-4 col-lg-12">
+                            <div class="col-xl-8 col-lg-12">
                             <?php
-                            echo getCardUser($cagnotteRestante);
-                            ?>
-                            </div>
-                            <div class="col-xl-4 col-lg-12">
-                            <?php
-                            echo getCardUser($cagnotteRestante);
+                            echo getCardHistoParis($datas);
                             ?>
                             </div>
                         </div>
@@ -176,5 +274,7 @@ function getCardUser($cagnotteRestante) {
         <script src="./js/app-menu.js" type="text/javascript"></script>
         <script src="./js/app.js" type="text/javascript"></script>
         <script src="./js/home.js" type="text/javascript"></script>
+        <script src="./js/datatables.min.js" type="text/javascript"></script>
+        <script src="./js/datatable-styling.js" type="text/javascript"></script>
     </body>
 </html>
