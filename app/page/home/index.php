@@ -5,12 +5,15 @@ use \DateTime;
 use \DateInterval;
 \session_start();
 
+if(empty($_SESSION) === true || empty($_SESSION['worldCup']) === true || empty($_SESSION['worldCup']['login']) === false || empty($_SESSION['worldCup']['login']['id']) === false) {
+    // header('Location: /public/index.php');
+}
+
 header('Content-Type: text/html; charset=UTF-8');
 require_once './../../class/SendRequete/SendRequete.class.php';
 require_once './class/TimeLine.class.php';
 
 if(empty($_POST) === false) {
-    echo '<br/<br/><br/><br/><br/>';
     if(empty($_POST['btnVaildPari']) === false && empty($_POST['pari']) === false) {
         $dateNow = new DateTime();
         $SendRequete = new SendRequete('insertPari', array(
@@ -23,35 +26,51 @@ if(empty($_POST) === false) {
         ));
         $datas = $SendRequete->exec();
     }
-    
 }
 
 $SendRequete = new SendRequete('loadDataPageDashBoard', array());
 $datas       = $SendRequete->exec();
-$TimeLine    = new TimeLine($datas);
-$tabMatch    = $TimeLine->getTabMatch();
 
-function getCardUser () {
+$idUser = $_SESSION['worldCup']['login']['id'];
+$cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUser);
+
+$TimeLine = new TimeLine($datas, $cagnotteRestante);
+$tabMatch = $TimeLine->getTabMatch();
+
+
+
+function getCagnottesUser(array $listCagnotte) {
+    $montant = 0;
+    if(empty($listCagnotte) === false) {
+        foreach($listCagnotte as $cagnotte) {
+            $montant += $cagnotte->montant;
+        }
+        unset($cagnotte);
+    }
+
+    return $montant;
+}
+function getCardUser($cagnotteRestante) {
     $html = '
     <div class="card profile-card-with-stats">
-      <div class="text-center">
-        <div class="card-body">
-          <img src="/app/src/images/portrait/small/avatar-s-21.png" class="rounded-circle  height-150" alt="Card image">
+        <div class="text-center">
+            <div class="card-body">
+                <img src="images/portrait/dessin/'.rand(1,8).'.png" class="rounded-circle  height-64" alt="Card image">
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">'.$_SESSION['worldCup']['login']['pseudo'].'</h4>
+                <h3 class="card-title">'.$cagnotteRestante.' €</h3>
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
+                <button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button>
+            </div>
         </div>
-        <div class="card-body">
-          <h4 class="card-title">@'.$_SESSION['world_cup']['login']['pseudo'].'</h4>
-          <h3 class="card-title">@Cagnotte</h3>
-        </div>
-        <div class="card-body">
-          <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
-          <button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button>
-        </div>
-      </div>
     </div>
-  ';
-  
-  return $html;
-  }
+    ';
+
+    return $html;
+}
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="fr" data-textdirection="ltr">
@@ -69,6 +88,7 @@ function getCardUser () {
         <link rel="stylesheet" type="text/css" href="./css/colors.css">
         <link rel="stylesheet" type="text/css" href="./css/components.css">
         <link rel="stylesheet" type="text/css" href="/app/src/css/nav.css">
+        <link rel="stylesheet" type="text/css" href="./css/home.css">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
     </head>
@@ -86,7 +106,7 @@ function getCardUser () {
                             </div>
                             <div class="col-xl-4 col-lg-12">
                             <?php
-                            echo getCardUser();
+                            echo getCardUser($cagnotteRestante);
                             ?>
                             </div>
                         </div>

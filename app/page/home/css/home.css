@@ -1,0 +1,15 @@
+#listBtnGoPari{margin-top:15px;}
+#listBtnGoPari>.item{display:inline-block;width:100px;margin-left:5px;margin-right:5px;}
+#listBtnGoPari>.item:first-child{margin-left:0;}
+#listBtnGoPari>.item:last-child{margin-right:0;}
+
+#olDetailMatch{padding-left: 0px;}
+
+@media only screen and (max-width: 768px) {
+    #divTimeline{margin:0;}
+    .olDetailMatch>li{padding:0;}
+    .cd-horizontal-timeline .timeline{width:100%;}
+}
+@media only screen and (max-width: 375px) {
+    #listBtnGoPari>.item{width: 100%;margin:5px 0;}
+}
