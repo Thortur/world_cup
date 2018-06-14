@@ -53,7 +53,27 @@ function getCagnottesUser(array $listCagnotte) {
 
     return $montant;
 }
-function getCardUser(float $cagnotteRestante) {
+function getCardUser(float $cagnotteRestante, $datas) {
+    // unset($datas->listTeam);
+    // unset($datas->listGroupeMatch);
+    // unset($datas->listGroupeMatchDetail);
+    // unset($datas->listMatch);
+    // unset($datas->listTypePari);
+    // unset($datas->listCotesLast);
+    // unset($datas->listCotesHisto);
+    // unset($datas->listPari);
+    // unset($datas->listCagnotte);
+    // echo '<pre>'.print_r($datas,true).'</pre>';
+
+    // $tabGroupeUser = array();
+    // if(is_object($datas->listGroupeUserDetail)) {
+    //     foreach($datas->listGroupeUserDetail as $k_detail => $v_detail) {
+    //         if($_SESSION['worldCup']['login']['id'] === $v_detail[0]) {
+
+    //         }
+    //     }
+    // }
+
     $html = '<div class="card text-center profile-card-with-stats">';
         $html .= '<div class="card-header card-head-inverse bg-blue">';
             $html .= '<h4 class="card-title">Votre profil</h4>';
@@ -96,7 +116,7 @@ function getCardUser(float $cagnotteRestante) {
             </div>
             <div class="card-body">
                 <button type="button" class="btn btn-outline-danger btn-md mr-1"><i class="fa fa-plus"></i> Passer Premium</button>
-                <button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button>
+                <a href="/app/page/home/profil.php"><button type="button" class="btn btn-outline-primary btn-md mr-1"><i class="ft-user"></i> Voir le profil</button></a>
             </div>
         </div>
     </div>
@@ -147,13 +167,14 @@ function getCardHistoParis(object $datas) {
         }
     }
 
-    unset($tabHistoPari);
+    $tabHistoPari = array();
     if(is_array($datas->listPari)) {
         foreach($datas->listPari as $k_pari => $v_pari) {
             if($v_pari->idUser === $_SESSION['worldCup']['login']['id']) {
                 $tabHistoPari[$v_pari->id] = $v_pari;
             }
         }
+        unset($k_pari, $v_pari);
     }
     // echo '<pre>'.print_r($tabHistoPari,true).'</pre>';
 
@@ -207,16 +228,51 @@ function getCardHistoParis(object $datas) {
     return $html;
 }
 function getCardClassement(object $datas) {
-    // echo '<pre>';print_r($datas->listCagnotte);echo '</pre>';
+    
+    $listUser = array();
 
-    if(is_object($datas->listCagnotte)) {
-        foreach($datas->listCagnotte as $k_cagnotte => $v_cagnotte) {
-            $zero = $v_cagnotte[0];
-            $tabCagnotte[$zero->idUser]['montant'] = $zero->montant;
+    if(is_object($datas->listUser) === true && empty($datas->listUser) === false) {
+        foreach($datas->listUser as $user) {
+            $listUser[$user->id] = array(
+                'id'       => $user->id,
+                'pseudo'   => $user->pseudo,
+                'avatar'   => $user->avatar,
+                'mail'     => $user->mail,
+                'pariWin'  => 0,
+                'cagnotte' => array(
+                        'montant'   => 0,
+                        'totalMise' => 0,
+                        'detail'    => array(),
+                    ),
+            );
+            (array)$user;
         }
+        unset($User);
     }
-    // echo '<pre>';print_r($tabCagnotte);echo '</pre>';
-
+    if(is_object($datas->listCagnotte) === true && empty($datas->listCagnotte) === false) {
+        foreach($datas->listCagnotte as $listRowCagnotteUser) {
+            if(is_array($listRowCagnotteUser) === true && empty($listRowCagnotteUser) === false) {
+                foreach($listRowCagnotteUser as $cagnotte) {
+                    $listUser[$cagnotte->idUser]['cagnotte']['detail'][$cagnotte->id] = (array)$cagnotte;
+                    $listUser[$cagnotte->idUser]['cagnotte']['montant'] += $cagnotte->montant;
+                    if($cagnotte->montant < 0) {
+                        $listUser[$cagnotte->idUser]['cagnotte']['totalMise'] += $cagnotte->montant * -1;
+                    }
+                }
+                unset($cagnotte);
+            }
+        }
+        unset($listRowCagnotteUser);
+    }
+    if(is_array($datas->listPari) === true && empty($datas->listPari) === false) {
+        foreach($datas->listPari as $pari) {
+            if($pari->gain > 0) {
+                $listUser[$pari->idUser]['pariWin']++;
+            }
+        }
+        unset($pari);
+    }
+ 
     $html = '<div class="card">';
         $html .= '<div class="card-header card-head-inverse bg-blue"">';
             $html .= '<h4 class="card-title">CLASSEMENT</h4>';
@@ -235,17 +291,18 @@ function getCardClassement(object $datas) {
                         $html .= '</tr>';
                     $html .= '</thead>';
                     $html .= '<tbody>';
-                        if(is_array($tabCagnotte)) {
-                            foreach($tabCagnotte as $k_user => $v_user) {
+                        if(empty($listUser) === false) {
+                            foreach($listUser as $user) {
                                 $html .= '<tr>';
-                                    $html .= '<td><span class="avatar"><img src="/src/images/portrait/dessin/'.$_SESSION['worldCup']['login']['avatar'].'.png" alt="avatar"><i></i></span></td>';
-                                    $html .= '<td>'.$_SESSION['worldCup']['login']['pseudo'].'</td>';
-                                    $html .= '<td>'.$v_user['montant'].'</td>';
-                                    $html .= '<td>0</td>';
+                                    $html .= '<td><span class="avatar"><img src="/src/images/portrait/dessin/'.$user['avatar'].'.png" alt="avatar"><i></i></span></td>';
+                                    $html .= '<td>'.$user['pseudo'].'</td>';
+                                    $html .= '<td>'.$user['cagnotte']['montant'].' €</td>';
+                                    $html .= '<td>'.$user['pariWin'].'</td>';
                                     $html .= '<td>1</td>';
-                                    $html .= '<td>0</td>';
+                                    $html .= '<td>'.$user['cagnotte']['totalMise'].' €</td>';
                                 $html .= '</tr>';
                             }
+                            unset($user);
                         }
                     $html .= '</tbody>';
                        $html .= '<tfoot>';
@@ -303,7 +360,7 @@ function getCardClassement(object $datas) {
                             </div>
                             <div class="col-xl-4 col-lg-12">
                             <?php
-                            echo getCardUser($cagnotteRestante);
+                            echo getCardUser($cagnotteRestante,$datas);
                             ?>
                             </div>
                         </div>
