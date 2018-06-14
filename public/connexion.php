@@ -49,7 +49,7 @@ else {
         'mailConfirm' => false,
     );
     
-    if (filter_var($data['mail'], FILTER_VALIDATE_EMAIL)) {
+    if (filter_var($data['mail'], FILTER_VALIDATE_EMAIL) !== false) {
         $SendRequete = new SendRequete('createUser', $data);
         $reponse = $SendRequete->exec();
         

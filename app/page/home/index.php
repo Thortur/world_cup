@@ -32,6 +32,7 @@ $SendRequete = new SendRequete('loadDataPageDashBoard', array());
 $datas       = $SendRequete->exec();
 
 
+$cagnotteRestante = 0;
 $idUserConnecter = $_SESSION['worldCup']['login']['id'];
 if(is_array($datas->listCagnotte->$idUserConnecter) === true && empty($datas->listCagnotte->$idUserConnecter) === false) {
     $cagnotteRestante = getCagnottesUser($datas->listCagnotte->$idUserConnecter);
@@ -74,21 +75,21 @@ function getCardUser(float $cagnotteRestante) {
                 <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
                 title="Nombre de paris réussis">
                     <span class="ladda-label"><i class="fa fa-bar-chart"></i>
-                        <span>4/4</span>
+                        <span>0/0</span>
                     </span>
                     <span class="ladda-spinner"></span>
                 </button>
                 <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
                 title="Plus grande côte misée">
                     <span class="ladda-label"><i class="fa fa-trophy"></i>
-                        <span>500</span>
+                        <span>1</span>
                     </span>
                     <span class="ladda-spinner"></span>
                 </button>
                 <button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom"
                 title="Plus grande somme gagnée sur un pari">
                     <span class="ladda-label"><i class="fa fa-money"></i>
-                        <span>150</span>
+                        <span>0</span>
                     </span>
                     <span class="ladda-spinner"></span>
                 </button>
@@ -205,6 +206,65 @@ function getCardHistoParis(object $datas) {
 
     return $html;
 }
+function getCardClassement(object $datas) {
+    // echo '<pre>';print_r($datas->listCagnotte);echo '</pre>';
+
+    if(is_object($datas->listCagnotte)) {
+        foreach($datas->listCagnotte as $k_cagnotte => $v_cagnotte) {
+            $zero = $v_cagnotte[0];
+            $tabCagnotte[$zero->idUser]['montant'] = $zero->montant;
+        }
+    }
+    // echo '<pre>';print_r($tabCagnotte);echo '</pre>';
+
+    $html = '<div class="card">';
+        $html .= '<div class="card-header card-head-inverse bg-blue"">';
+            $html .= '<h4 class="card-title">CLASSEMENT</h4>';
+        $html .= '</div>';
+        $html .= '<div class="card-content collapse show">';
+            $html .= '<div class="card-body card-dashboard">';
+                $html .= '<table class="table table-striped table-bordered base-style">';
+                    $html .= '<thead>';
+                        $html .= '<tr>';
+                            $html .= '<th>Avatar</th>';
+                            $html .= '<th>Joueur</th>';
+                            $html .= '<th>Cagnotte</th>';
+                            $html .= '<th>Paris gagnés</th>';
+                            $html .= '<th>Total côtes</th>';
+                            $html .= '<th>Total des mises</th>';
+                        $html .= '</tr>';
+                    $html .= '</thead>';
+                    $html .= '<tbody>';
+                        if(is_array($tabCagnotte)) {
+                            foreach($tabCagnotte as $k_user => $v_user) {
+                                $html .= '<tr>';
+                                    $html .= '<td><span class="avatar"><img src="/src/images/portrait/dessin/'.$_SESSION['worldCup']['login']['avatar'].'.png" alt="avatar"><i></i></span></td>';
+                                    $html .= '<td>'.$_SESSION['worldCup']['login']['pseudo'].'</td>';
+                                    $html .= '<td>'.$v_user['montant'].'</td>';
+                                    $html .= '<td>0</td>';
+                                    $html .= '<td>1</td>';
+                                    $html .= '<td>0</td>';
+                                $html .= '</tr>';
+                            }
+                        }
+                    $html .= '</tbody>';
+                       $html .= '<tfoot>';
+                        $html .= '<tr>';
+                            $html .= '<th>Avatar</th>';
+                            $html .= '<th>Joueur</th>';
+                            $html .= '<th>Cagnotte</th>';
+                            $html .= '<th>Paris gagnés</th>';
+                            $html .= '<th>Total côtes</th>';
+                            $html .= '<th>Total des mises</th>';
+                        $html .= '</tr>';
+                    $html .= '</tfoot>';
+                $html .= '</table>';
+            $html .= '</div>';
+        $html .= '</div>';
+    $html .= '</div>';
+
+    return $html;
+}
 
 ?>
 <!DOCTYPE html>
@@ -248,14 +308,16 @@ function getCardHistoParis(object $datas) {
                             </div>
                         </div>
                         <div class="row match-height">
-                            <div class="col-xl-4 col-lg-12">
-                            <?php
-                            echo getCardUser($cagnotteRestante);
-                            ?>
-                            </div>
-                            <div class="col-xl-8 col-lg-12">
+                            <div class="col-xl-12 col-lg-12">
                             <?php
                             echo getCardHistoParis($datas);
+                            ?>
+                            </div>
+                        </div>
+                        <div class="row match-height">
+                            <div class="col-xl-12 col-lg-12">
+                            <?php
+                            echo getCardClassement($datas);
                             ?>
                             </div>
                         </div>

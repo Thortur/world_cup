@@ -1,3 +1,14 @@
 #lienLogoNavBar{padding:0px;}
 #logoNavBar {height:41px;}
 nav.bg-primary {background-color: #007bff!important;}
+#menuPrincipale {padding-left:10px;}
+#menuPrincipale>ul>li>a {font-size:16px;padding-top:10px;padding-bottom:10px;}
+@media (max-width: 1199.98px) {
+    .header-navbar .navbar-container ul.nav li .dropdown-toggle::after{top:-6px;}
+}
+@media (max-width: 992px){
+    .navbar-expand-lg .navbar-toggler {position:absolute;right:10px;top:10px;}
+}
+@media (max-width: 768px){
+    #menuPrincipale>ul>li>a {font-size:24px;padding-top:10px;padding-bottom:10px;}
+}
