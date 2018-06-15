@@ -1,8 +1,11 @@
-#listBtnGoPari{margin-top:15px;}
-#listBtnGoPari>.item{display:inline-block;width:100px;margin-left:5px;margin-right:5px;}
-#listBtnGoPari>.item:first-child{margin-left:0;}
-#listBtnGoPari>.item:last-child{margin-right:0;}
+.listBtnGoPari{margin-top:15px;}
+.listBtnGoPari>.item{display:inline-block;width:100px;margin-left:5px;margin-right:5px;}
+.listBtnGoPari>.item:first-child{margin-left:0;}
+.listBtnGoPari>.item:last-child{margin-right:0;}
+#btnSaisieResultat{width:250px;margin-left:auto;margin-right:auto;}
 
+#modalResultatMatch #listEquipeMatch{text-align:center;}
+#modalResultatMatch #listEquipeMatch>.item{display:inline-block;width: 100px;}
 #olDetailMatch{padding-left:0px;}
 
 @media (max-width:768px) {
@@ -12,8 +15,8 @@
 }
 @media (max-width:420px) {
     #olDetailMatch{padding:0;}
-    #listBtnGoPari>.item{width:90px;}
+    .listBtnGoPari>.item{width:90px;}
 }
 @media (max-width:375px) {
-    #listBtnGoPari>.item{width:100%;margin:5px 0;}
+    .listBtnGoPari>.item{width:100%;margin:5px 0;}
 }
