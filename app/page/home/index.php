@@ -27,7 +27,17 @@ if(empty($_POST) === false) {
             'montant'    => (float)$_POST['pari']['montant'],
             'date'       => $dateNow->format('Y-m-d H:i:s'),
         ));
-        $datas = $SendRequete->exec();
+        $SendRequete->exec();
+    }
+    else if(empty($_POST['btnVaildResultat']) === false && empty($_POST['resultat']) === false) {
+        $SendRequete = new SendRequete('saveResultatMatch', array(
+            'idMatch'    => (int)$_POST['resultat']['match'],
+            'idTeamA'    => (int)$_POST['resultat']['idTeamA'],
+            'scoreTeamA' => (int)$_POST['resultat']['scoreA'],
+            'idTeamB'    => (int)$_POST['resultat']['idTeamB'],
+            'scoreTeamB' => (int)$_POST['resultat']['scoreB'],
+        ));
+        $SendRequete->exec();
     }
 }
 
