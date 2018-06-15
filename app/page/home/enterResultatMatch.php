@@ -1,5 +1,5 @@
 <?php
-namespace WorldCup;
+namespace worldCup;
 use \SendRequete\SendRequete;
 use \DateTime;
 use \DateInterval;
@@ -11,54 +11,6 @@ if(empty($_SESSION) === true || empty($_SESSION['worldCup']) === true || empty($
 
 header('Content-Type: text/html; charset=UTF-8');
 require_once './../../class/SendRequete/SendRequete.class.php';
-require_once './class/TimeLine.class.php';
-require_once './class/CardClassement.class.php';
-require_once './class/CardHistoParis.class.php';
-require_once './class/CardUser.class.php';
-
-if(empty($_POST) === false) {
-    if(empty($_POST['btnVaildPari']) === false && empty($_POST['pari']) === false) {
-        $dateNow = new DateTime();
-        $SendRequete = new SendRequete('insertPari', array(
-            'idMatch'    => (int)$_POST['pari']['match'],
-            'idTypePari' => (int)$_POST['pari']['type'],
-            'idUser'     => (int)$_SESSION['worldCup']['login']['id'],
-            'idCotes'    => (int)$_POST['pari']['cote'],
-            'montant'    => (float)$_POST['pari']['montant'],
-            'date'       => $dateNow->format('Y-m-d H:i:s'),
-        ));
-        $datas = $SendRequete->exec();
-    }
-}
-
-$SendRequete = new SendRequete('loadDataPageDashBoard', array());
-$datas       = $SendRequete->exec();
-
-
-$cagnotteRestante = 0;
-$idUserConnecter = $_SESSION['worldCup']['login']['id'];
-if(is_array($datas->listCagnotte->$idUserConnecter) === true && empty($datas->listCagnotte->$idUserConnecter) === false) {
-    $cagnotteRestante = (float)getCagnottesUser($datas->listCagnotte->$idUserConnecter);
-}
-
-
-$TimeLine       = new TimeLine($idUserConnecter, $datas, $cagnotteRestante);
-$CardClassement = new CardClassement($idUserConnecter, $datas);
-$CardHistoParis = new CardHistoParis($idUserConnecter, $datas);
-$CardUser       = new CardUser($idUserConnecter, $datas, $cagnotteRestante);
-
-function getCagnottesUser(array $listCagnotte) {
-    $montant = 0;
-    if(empty($listCagnotte) === false) {
-        foreach($listCagnotte as $cagnotte) {
-            $montant += $cagnotte->montant;
-        }
-        unset($cagnotte);
-    }
-
-    return $montant;
-}
-
 
 ?>
 <!DOCTYPE html>
@@ -72,7 +24,6 @@ function getCagnottesUser(array $listCagnotte) {
         <link rel="stylesheet" type="text/css" href="/app/src/css/feather.min.css">
         <link rel="stylesheet" type="text/css" href="/app/src/fonts/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="./css/pace.css">
-        <link rel="stylesheet" type="text/css" href="./css/timeline.css">
         <link rel="stylesheet" type="text/css" href="./css/bootstrap-extended.css">
         <link rel="stylesheet" type="text/css" href="./css/colors.css">
         <link rel="stylesheet" type="text/css" href="./css/components.css">
@@ -91,27 +42,28 @@ function getCagnottesUser(array $listCagnotte) {
                     <div class="content-body">
                         <div class="row match-height">
                             <div class="col-xl-8 col-lg-12">
+                            <h3>C'est pas encore fini!!!</h3>
                             <?php
-                            echo $TimeLine->getCardParis($tabMatch);
+                            // echo $TimeLine->getCardParis($tabMatch);
                             ?>
                             </div>
                             <div class="col-xl-4 col-lg-12">
                             <?php
-                            echo $CardUser->getCard();
+                            // echo getCardUser($cagnotteRestante);
                             ?>
                             </div>
                         </div>
                         <div class="row match-height">
                             <div class="col-xl-12 col-lg-12">
                             <?php
-                            echo $CardHistoParis->getCard();
+                            // echo getCardHistoParis($datas);
                             ?>
                             </div>
                         </div>
                         <div class="row match-height">
                             <div class="col-xl-12 col-lg-12">
                             <?php
-                            echo $CardClassement->getCard();
+                            // echo getCardClassement($datas);
                             ?>
                             </div>
                         </div>
@@ -126,7 +78,6 @@ function getCagnottesUser(array $listCagnotte) {
             </p>
         </footer>
         <script src="./js/vendors.min.js" type="text/javascript"></script>
-        <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
         <script src="./js/app-menu.js" type="text/javascript"></script>
         <script src="./js/app.js" type="text/javascript"></script>
         <script src="./js/home.js" type="text/javascript"></script>
