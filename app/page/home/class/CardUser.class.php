@@ -58,6 +58,7 @@ class CardUser {
         $this->setMail($datas->listUser->$idUserConnecter->mail);
         $this->setAvatar($datas->listUser->$idUserConnecter->avatar);
         $this->setCagnotteRestante($cagnotteRestante);
+        // echo '<pre>'.print_r($datas,true).'</pre>';
     }
 
     /**
@@ -65,7 +66,39 @@ class CardUser {
      * 
      * @return string $html
      */
-    public function getCard() {
+    public function getCard($datas) {
+        $nbPari = 0;
+        $nbPariWin = 0;
+        $totalCote = 0;
+        $maxGain = 0;
+        if(is_object($datas->listPari) === true && empty($datas->listPari) === false) {
+            // echo '<pre>';print_r($datas->listPari);
+            // echo '<pre>';print_r($datas->listCotesLast);
+            foreach($datas->listPari as $pari) {
+                $idMatch = $pari->idMatch;
+                $idTypePari = $pari->idTypePari;
+                $idCote = $pari->idCotes;
+
+                if($pari->idUser === $this->idUserConnecter) {
+                    $nbPari++;
+                    if($pari->gain > 0) {
+                        $nbPariWin++;
+                        $maxGain = (($maxGain > $pari->gain) ? $maxGain : $pari->gain);
+
+                        if(is_object($datas->listCotesLast->$idMatch->$idTypePari)) {
+                            foreach($datas->listCotesLast->$idMatch->$idTypePari as $team) {
+                                if($team->id === $idCote) {
+                                    $totalCote += $team->cote;
+                                }
+                            }
+                            unset($team);
+                        }
+                    }
+                }
+            }
+            unset($pari,$idMatch,$idTypePari,$idCote);
+        }
+
         $html = '<div class="card text-center profile-card-with-stats">';
             $html .= '<div class="card-header card-head-inverse bg-blue">';
                 $html .= '<h4 class="card-title">Votre profil</h4>';
@@ -77,28 +110,34 @@ class CardUser {
                 $html .= '<div class="card-body">';
                     $html .= '<h4 class="card-title">@'.$this->getPseudo().'</h4>';
                     $html .= '<ul class="list-inline list-inline-pipe">';
-                        $html .= '<li>Groupe1</li>';
-                        $html .= '<li>Misterbooking</li>';
-                        $html .= '<li>Groupe3</li>';
+                        if(is_object($datas->listGroupeUserDetail)) {
+                            foreach($datas->listGroupeUserDetail as $k_groupe => $v_groupe) {
+                                $idUser = $this->idUserConnecter;
+                                if(is_object($v_groupe->$idUser) && empty($v_groupe->$idUser) === false) {
+                                    $html .= '<li>'.$datas->listGroupeUser->$k_groupe->nom.'</li>';
+                                }
+                            }
+                            unset($k_groupe,$v_groupe,$idUser);
+                        }
                     $html .= '</ul>';
                     $html .= '<h6 class="card-subtitle text-muted">'.$this->getCagnotteRestante().' €</h6>';
                 $html .= '</div>';
                 $html .= '<div class="btn-group" role="group" aria-label="Profile example">';
                     $html .= '<button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Nombre de paris réussis">';
                         $html .= '<span class="ladda-label"><i class="fa fa-bar-chart"></i>';
-                            $html .= '<span>0/0</span>';
+                            $html .= '<span>'.$nbPariWin.'/'.$nbPari.'</span>';
                         $html .= '</span>';
                         $html .= '<span class="ladda-spinner"></span>';
                     $html .= '</button>';
-                    $html .= '<button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Plus grande côte misée">';
+                    $html .= '<button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Total des côtes gagnées">';
                         $html .= '<span class="ladda-label"><i class="fa fa-trophy"></i>';
-                            $html .= '<span>1</span>';
+                            $html .= '<span>'.$totalCote.'</span>';
                         $html .= '</span>';
                         $html .= '<span class="ladda-spinner"></span>';
                     $html .= '</button>';
                     $html .= '<button type="button" class="btn btn-float box-shadow-0 btn-outline-info" data-toggle="tooltip" data-placement="bottom" title="Plus grande somme gagnée sur un pari">';
                         $html .= '<span class="ladda-label"><i class="fa fa-money"></i>';
-                            $html .= '<span>0</span>';
+                            $html .= '<span>'.$maxGain.' €</span>';
                         $html .= '</span>';
                         $html .= '<span class="ladda-spinner"></span>';
                     $html .= '</button>';
@@ -109,6 +148,8 @@ class CardUser {
                 $html .= '</div>';
             $html .= '</div>';
         $html .= '</div>';
+
+        unset($nbPari,$nbPariWin,$totalCote,$maxGain);
 
         return $html;
     }
