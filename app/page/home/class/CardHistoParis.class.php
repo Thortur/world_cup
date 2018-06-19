@@ -47,7 +47,7 @@ class CardHistoParis {
      */
     public function getCard() {
         $html = '<div class="card">';
-            $html .= '<div class="card-header card-head-inverse bg-blue"">';
+            $html .= '<div class="card-header card-head-inverse bg-blue">';
                 $html .= '<h4 class="card-title">VOS PARIS REALISES</h4>';
             $html .= '</div>';
             $html .= '<div class="card-content collapse show">';
@@ -68,8 +68,11 @@ class CardHistoParis {
                                 foreach($this->listHistoPari as $pari) {
                                     $idCote     = $pari->idCotes;
                                     $idTeamPari = $this->listCotesHisto->$idCote->idTeam;
-                                    $team       = 'teamA';
-                                    if($idTeamPari === $this->listMatch[$pari->idMatch]->teamB->idTeam) {
+                                    $team = 'teamNull';
+                                    if($idTeamPari === $this->listMatch[$pari->idMatch]->teamA->idTeam) {
+                                        $team = 'teamA';
+                                    }
+                                    else if($idTeamPari === $this->listMatch[$pari->idMatch]->teamB->idTeam){
                                         $team = 'teamB';
                                     }
                                     $html .= '<tr>';
@@ -210,7 +213,7 @@ class CardHistoParis {
                     'teamNull'      => (object)array(
                         'idTeam' => 0,
                         'equipe' => 'Match Nul',
-                        'flag'   => $datas->listTeam->$idTeamB->iso2,
+                        'flag'   => '_United Nations',
                     ),
                 );
                 unset($idTeamA, $idTeamB, $idTypePari, $coteNul, $idGroupeMatch);

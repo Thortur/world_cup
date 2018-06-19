@@ -15,6 +15,7 @@ require_once './class/TimeLine.class.php';
 require_once './class/CardClassement.class.php';
 require_once './class/CardHistoParis.class.php';
 require_once './class/CardUser.class.php';
+require_once './class/CardGraph.class.php';
 
 if(empty($_POST) === false) {
     if(empty($_POST['btnVaildPari']) === false && empty($_POST['pari']) === false) {
@@ -56,6 +57,7 @@ $TimeLine       = new TimeLine($idUserConnecter, $datas, $cagnotteRestante);
 $CardClassement = new CardClassement($idUserConnecter, $datas);
 $CardHistoParis = new CardHistoParis($idUserConnecter, $datas);
 $CardUser       = new CardUser($idUserConnecter, $datas, $cagnotteRestante);
+$CardGraph      = new CardGraph($idUserConnecter, $datas);
 
 function getCagnottesUser(array $listCagnotte) {
     $montant = 0;
@@ -107,8 +109,22 @@ function getCagnottesUser(array $listCagnotte) {
                             </div>
                             <div class="col-xl-4 col-lg-12">
                             <?php
-                            echo $CardUser->getCard();
+                            echo $CardUser->getCard($datas);
                             ?>
+                            </div>
+                        </div>
+                        <div class="row match-height">
+                            <div class="col-xl-12 col-lg-12">
+                                <div class="card">
+                                    <div class="card-header card-head-inverse bg-blue">
+                                        <h4 class="card-title">Graphique des cagnottes</h4>
+                                    </div>
+                                    <div class="card-content collapse show">
+                                        <div class="card-body chartjs">
+                                            <canvas id="area-chart" height="500"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row match-height">
@@ -142,5 +158,80 @@ function getCagnottesUser(array $listCagnotte) {
         <script src="./js/home.js" type="text/javascript"></script>
         <script src="./js/datatables.min.js" type="text/javascript"></script>
         <script src="./js/datatable-styling.js" type="text/javascript"></script>
+        <script src="./js/chart.min.js" type="text/javascript"></script>
+        <script>
+        $(window).on("load", function(){
+            var ctx = $("#area-chart");
+            var chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'bottom',
+                },
+                hover: {
+                    mode: 'label'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Matches'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        gridLines: {
+                            color: "#f3f3f3",
+                            drawTicks: false,
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Cagnotte'
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Votre cagnotte après chaque match'
+                }
+            };
+            var chartData = {
+                labels: [<?php echo $CardGraph->dataGraphDraw['label']; ?>],
+                datasets: [{
+                    label: "Moyenne des cagnottes",
+                    data: [<?php echo $CardGraph->dataGraphDraw['moyenne']; ?>],
+                    backgroundColor: "rgba(209,212,219,.4)",
+                    borderColor: "transparent",
+                    pointBorderColor: "#D1D4DB",
+                    pointBackgroundColor: "#FFF",
+                    pointBorderWidth: 2,
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                }, {
+                    label: "Votre cagnotte personnelle",
+                    data: [<?php echo $CardGraph->dataGraphDraw['perso']; ?>],
+                    backgroundColor: "rgba(81,117,224,.7)",
+                    borderColor: "transparent",
+                    pointBorderColor: "#5175E0",
+                    pointBackgroundColor: "#FFF",
+                    pointBorderWidth: 2,
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 4,
+                }]
+            };
+
+            var config = {
+                type: 'line',
+                options : chartOptions,
+                data : chartData
+            };
+            var areaChart = new Chart(ctx, config);
+        });
+        </script>
     </body>
 </html>

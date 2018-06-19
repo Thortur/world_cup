@@ -36,9 +36,19 @@ class TimeLine {
         $listMatch       = '';
         $listMatchDetail = '';
         $dateNow = new DateTime();
+
         if(is_array($this->listMatch) === true) {
             $selected = ' class="selected"';
             foreach($this->listMatch as $match) {
+                // echo '<pre>'.print_r($match,true).'</pre>';
+                $tauxA = 0;
+                $tauxB = 0;
+                $tauxNul = 0;
+                if($match->nbPariMatch > 0) {
+                    $tauxA = round((($match->teamA->nbPari * 100) / $match->nbPariMatch),0);
+                    $tauxB = round((($match->teamB->nbPari * 100) / $match->nbPariMatch),0);
+                    $tauxNul = round((($match->teamNull->nbPari * 100) / $match->nbPariMatch),0);
+                }
                 $listMatch .= '<li><a href="#0" data-date="'.$match->dateFausse.'"'.$selected.'><img class="flag" src="/src/images/flags/'.$match->teamA->flag.'.png" style="width:24px;margin-right:1px;"><img class="flag" src="/src/images/flags/'.$match->teamB->flag.'.png" style="width:24px;"></a></li>';
         
                 $listMatchDetail .= '<li'.$selected.' data-date="'.$match->dateFausse.'">';
@@ -52,15 +62,15 @@ class TimeLine {
                         $listMatchDetail .= '<div class="listBtnGoPari" data-type-pari="1" data-match="'.$match->idMatch.'" data-nom-team-a="'.$match->teamA->equipe.'" data-nom-team-b="'.$match->teamB->equipe.'">';
                             $listMatchDetail .= '<div class="item">';
                                 $listMatchDetail .= '<h5>'.$match->teamA->equipe.'</h5>';
-                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-info btnChoixPari" data-cote="'.$match->teamA->idCote.'" >'.$match->teamA->cote.'</button>';
+                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-info btnChoixPari" data-cote="'.$match->teamA->idCote.'" >'.$match->teamA->cote.' ('.$tauxA.'%)</button>';
                             $listMatchDetail .= '</div>';
                             $listMatchDetail .= '<div class="item">';
                                 $listMatchDetail .= '<h5>'.$match->teamNull->equipe.'</h5>';
-                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-secondary btnChoixPari" data-cote="'.$match->teamNull->idCote.'">'.$match->teamNull->cote.'</button>';
+                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-secondary btnChoixPari" data-cote="'.$match->teamNull->idCote.'">'.$match->teamNull->cote.' ('.$tauxB.'%)</button>';
                             $listMatchDetail .= '</div>';
                             $listMatchDetail .= '<div class="item">';
                                 $listMatchDetail .= '<h5>'.$match->teamB->equipe.'</h5>';
-                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-info btnChoixPari" data-cote="'.$match->teamB->idCote.'">'.$match->teamB->cote.'</button>';
+                                $listMatchDetail .= '<button type="button" class="btn mr-1 btn-block btn-info btnChoixPari" data-cote="'.$match->teamB->idCote.'">'.$match->teamB->cote.' ('.$tauxNul.'%)</button>';
                             $listMatchDetail .= '</div>';
                         $listMatchDetail .= '</div>';
                     }
@@ -73,7 +83,7 @@ class TimeLine {
         
                 unset($selected);
             }
-            unset($match);
+            unset($match,$tauxA,$tauxB,$tauxNul);
         }
     
         $html = '<div class="card text-center">';
@@ -176,14 +186,27 @@ class TimeLine {
     public function setListMatch($datas) {
         $this->listMatch    = array();
         $tabListPari        = array();
+        $tabListPariGlobal  = array();
         $dateNow            = new DateTime();
+        $idTypePari         = 1;
+
         if(is_object($datas->listPari) === true && empty($datas->listPari) === false) {
             foreach($datas->listPari as $pari) {
                 if($pari->idUser === $this->getIdUserConnecter()) {
                     $tabListPari[$pari->idMatch] = $pari;
                 }
+
+                $idMatch = $pari->idMatch;
+                if(is_object($datas->listCotesLast->$idMatch->$idTypePari)) {
+                    foreach($datas->listCotesLast->$idMatch->$idTypePari as $team) {
+                        if($team->id === $pari->idCotes) {
+                            $tabListPariGlobal[$idMatch][$team->idTeam][$pari->id] = $pari;
+                        }
+                    }
+                    unset($team);
+                }
             }
-            unset($pari);
+            unset($pari,$idMatch);
         }
         
         if(is_object($datas->listMatch) && empty($datas->listMatch) === false) {
@@ -193,24 +216,28 @@ class TimeLine {
                 $dateMatch = new DateTime($match->date);
                 $idMatch = $match->id;
 
-                if((in_array($this->getIdUserConnecter(), array(1, 2)) === true && empty($datas->listResultat->$idMatch) === true) || ($dateNow < $dateMatch && empty($tabListPari[$idMatch]) === true)) {
+                if((in_array($this->getIdUserConnecter(), array(1, 2)) === true && empty($datas->listResultat->$idMatch) === true && $dateNow > $dateMatch) || ($dateNow < $dateMatch && empty($tabListPari[$idMatch]) === true)) {
                     $idTeamA       = $match->teamA;
                     $idTeamB       = $match->teamB;
                     $idGroupeMatch = $match->idGroupeMatch;
-                    $idTypePari    = 1;
                     $coteNul       = 0;
+                    $countA        = ((is_array($tabListPariGlobal[$idMatch][$idTeamA])) ? count($tabListPariGlobal[$idMatch][$idTeamA]) : 0);
+                    $countB        = ((is_array($tabListPariGlobal[$idMatch][$idTeamB])) ? count($tabListPariGlobal[$idMatch][$idTeamB]) : 0);
+                    $countNul        = ((is_array($tabListPariGlobal[$idMatch][$coteNul])) ? count($tabListPariGlobal[$idMatch][$coteNul]) : 0);
                     
                     $this->listMatch[$idMatch] = (object)array(
                         'idMatch'    => $idMatch,
                         'date'       => clone $dateMatch,
                         'dateFausse' => $datetime->format('d/m/Y'),
                         'typeMatch'  => $datas->listGroupeMatch->$idGroupeMatch->groupe,
+                        'nbPariMatch'=> ($countA + $countB + $countNul),
                         'teamA'      => (object)array(
                             'idTeam' => $idTeamA,
                             'equipe' => $datas->listTeam->$idTeamA->nom,
                             'flag'   => $datas->listTeam->$idTeamA->iso2,
                             'cote'   => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->cote,
                             'idCote' => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamA->id,
+                            'nbPari' => $countA,
                         ),
                         'teamB'      => (object)array(
                             'idTeam' => $idTeamB,
@@ -218,6 +245,7 @@ class TimeLine {
                             'flag'   => $datas->listTeam->$idTeamB->iso2,
                             'cote'   => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->cote,
                             'idCote' => $datas->listCotesLast->$idMatch->$idTypePari->$idTeamB->id,
+                            'nbPari' => $countB,
                         ),
                         'teamNull'      => (object)array(
                             'idTeam' => 0,
@@ -225,15 +253,17 @@ class TimeLine {
                             'flag'   => $datas->listTeam->$idTeamB->iso2,
                             'cote'   => $datas->listCotesLast->$idMatch->$idTypePari->$coteNul->cote,
                             'idCote' => $datas->listCotesLast->$idMatch->$idTypePari->$coteNul->id,
+                            'nbPari' => $countNul,
                         ),
                     );
-                    unset($idTeamA, $idTeamB, $idTypePari, $coteNul, $idGroupeMatch);
+                    unset($idTeamA, $idTeamB, $coteNul, $countA, $countB, $countNul, $idGroupeMatch);
                 }
 
                 unset($idMatch);
             }
             unset($datetime, $match);
         }
+        unset($idTypePari);
     }
 
     /**

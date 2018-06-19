@@ -1,4 +1,15 @@
 <?php
+//si Prod
+if(stripos($_SERVER['SERVER_SOFTWARE'], 'win') === false) {
+    //redirection vers https si on arrive sur http
+    if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off"){
+        $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $redirect);
+        exit();
+    }
+}
+
 header('Content-Type: text/html; charset=UTF-8');
 session_start();
 unset($_SESSION);
