@@ -22,4 +22,13 @@ $(document).ready(function(){
         $(document).find('.labelProtrait').removeClass('labelProtraitChecked');
         $(this).addClass('labelProtraitChecked');
     });
+
+    $(document).find('#inputPassWord').strength({
+        strengthClass: 'strength',
+        strengthMeterClass: 'strength_meter',
+        strengthButtonClass: 'button_strength',
+        strengthButtonText: '',
+        strengthButtonTextToggle: '',
+        showLabelStatus: false
+    });
 });

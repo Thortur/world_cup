@@ -40,7 +40,6 @@ class TimeLine {
         if(is_array($this->listMatch) === true) {
             $selected = ' class="selected"';
             foreach($this->listMatch as $match) {
-                // echo '<pre>'.print_r($match,true).'</pre>';
                 $tauxA = 0;
                 $tauxB = 0;
                 $tauxNul = 0;
@@ -49,6 +48,7 @@ class TimeLine {
                     $tauxB = round((($match->teamB->nbPari * 100) / $match->nbPariMatch),0);
                     $tauxNul = round((($match->teamNull->nbPari * 100) / $match->nbPariMatch),0);
                 }
+                
                 $listMatch .= '<li><a href="#0" data-date="'.$match->dateFausse.'"'.$selected.'><img class="flag" src="/src/images/flags/'.$match->teamA->flag.'.png" style="width:24px;margin-right:1px;"><img class="flag" src="/src/images/flags/'.$match->teamB->flag.'.png" style="width:24px;"></a></li>';
         
                 $listMatchDetail .= '<li'.$selected.' data-date="'.$match->dateFausse.'">';
@@ -225,11 +225,21 @@ class TimeLine {
                     $countB        = ((is_array($tabListPariGlobal[$idMatch][$idTeamB])) ? count($tabListPariGlobal[$idMatch][$idTeamB]) : 0);
                     $countNul        = ((is_array($tabListPariGlobal[$idMatch][$coteNul])) ? count($tabListPariGlobal[$idMatch][$coteNul]) : 0);
                     
+                    $idTypeMatch = $match->idTypeMatch;
+                    switch ($match->idTypeMatch) {
+                        case 1:
+                            $labelTypeMatch = $datas->listGroupeMatch->$idGroupeMatch->groupe;
+                            break;
+                        default:
+                            $labelTypeMatch = $datas->listTypeMatch->$idTypeMatch->nom;
+                    }
+                    unset($idTypeMatch);
+
                     $this->listMatch[$idMatch] = (object)array(
                         'idMatch'    => $idMatch,
                         'date'       => clone $dateMatch,
                         'dateFausse' => $datetime->format('d/m/Y'),
-                        'typeMatch'  => $datas->listGroupeMatch->$idGroupeMatch->groupe,
+                        'typeMatch'  => $labelTypeMatch,
                         'nbPariMatch'=> ($countA + $countB + $countNul),
                         'teamA'      => (object)array(
                             'idTeam' => $idTeamA,

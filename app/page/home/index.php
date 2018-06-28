@@ -151,55 +151,7 @@ function getCagnottesUser(array $listCagnotte) {
             <span class="float-md-right d-block d-md-inline-block d-none d-lg-block">Fait avec <i class="ft-heart pink"></i></span>
             </p>
         </footer>
-        <script src="./js/vendors.min.js" type="text/javascript"></script>
-        <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
-        <script src="./js/app-menu.js" type="text/javascript"></script>
-        <script src="./js/app.js" type="text/javascript"></script>
-        <script src="./js/home.js" type="text/javascript"></script>
-        <script src="./js/datatables.min.js" type="text/javascript"></script>
-        <script src="./js/datatable-styling.js" type="text/javascript"></script>
-        <script src="./js/chart.min.js" type="text/javascript"></script>
-        <script>
-        $(window).on("load", function(){
-            var ctx = $("#area-chart");
-            var chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'bottom',
-                },
-                hover: {
-                    mode: 'label'
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        gridLines: {
-                            color: "#f3f3f3",
-                            drawTicks: false,
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Matches'
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        gridLines: {
-                            color: "#f3f3f3",
-                            drawTicks: false,
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Cagnotte'
-                        }
-                    }]
-                },
-                title: {
-                    display: true,
-                    text: 'Votre cagnotte après chaque match'
-                }
-            };
+        <script type="text/javascript">
             var chartData = {
                 labels: [<?php echo $CardGraph->dataGraphDraw['label']; ?>],
                 datasets: [{
@@ -224,14 +176,14 @@ function getCagnottesUser(array $listCagnotte) {
                     pointRadius: 4,
                 }]
             };
-
-            var config = {
-                type: 'line',
-                options : chartOptions,
-                data : chartData
-            };
-            var areaChart = new Chart(ctx, config);
-        });
         </script>
+        <script src="./js/vendors.min.js" type="text/javascript"></script>
+        <script src="./js/horizontal-timeline.js" type="text/javascript"></script>
+        <script src="./js/app-menu.js" type="text/javascript"></script>
+        <script src="./js/app.js" type="text/javascript"></script>
+        <script src="./js/home.js" type="text/javascript"></script>
+        <script src="./js/datatables.min.js" type="text/javascript"></script>
+        <script src="./js/datatable-styling.js" type="text/javascript"></script>
+        <script src="./js/chart.min.js" type="text/javascript"></script>
     </body>
 </html>
