@@ -40,12 +40,69 @@ class CardHistoParis {
         $this->setListCotesHisto($datas->listCotesHisto);
     }
 
+    private function getNumMatch(int $idMatch) {
+        $numMatch = (string)$idMatch;
+        for($i = 1; $i <= 3; $i++) {
+            if(strlen($numMatch) < $i) {
+                $numMatch = '0'.$numMatch;
+            }
+        }
+
+        return $numMatch;
+    }
+
     /**
      * Retoure le code html de la carte des paris
      * 
      * @return string $html
      */
     public function getCard() {
+        $html       = '';
+        $dateNow    = new DateTime();
+        /*
+        $listMatch  = array(
+            'parisEnCours'  => array(),
+            'parisTerminer' => array(),
+        );
+        $listOnglet = array(
+            'parisEnCours'  => 'Paris en cours',
+            'parisTerminer' => 'Paris terminer',
+        );
+        $listPari = array();
+
+        if(is_array($this->listMatch) === true && empty($this->listMatch) === false) {
+            foreach($this->listMatch as $match) {
+                $dateString = $match->date->format('Y-m-d H:i');
+                $code = 'parisEnCours';
+                if($match->date <= $dateNow) {
+                    $code = 'parisTerminer';
+                }
+                $listMatch[$code][$dateString][$match->idMatch] = $match;
+
+                $numMatch = $this->getNumMatch((int)$match->idMatch);
+                if(empty($listPari[$numMatch]) === true) {
+                    if($numMatch !== '000') {
+                        $listPari[$numMatch] = array();
+                    }
+                }
+            }
+            unset($match);
+        }
+        krsort($listMatch['parisEnCours']);
+        krsort($listMatch['parisTerminer']);
+        // krsort($listPari);
+        
+        if(is_array($this->listHistoPari) === true && empty($this->listHistoPari) === false) {
+            foreach($this->listHistoPari as $pari) {
+                $numMatch = $this->getNumMatch((int)$pari->idMatch);
+                $listPari[$numMatch][$pari->idTypePari] = $pari;
+            }
+            unset($pari, $numMatch);
+        }
+        // echo '<pre>';
+        // print_r($listMatch);
+        // echo '</pre>';
+*/
         $html = '<div class="card">';
             $html .= '<div class="card-header card-head-inverse bg-blue">';
                 $html .= '<h4 class="card-title">VOS PARIS REALISES</h4>';
@@ -54,16 +111,20 @@ class CardHistoParis {
                 $html .= '<div class="card-body card-dashboard">';
                     $html .= '<table class="table table-striped table-bordered base-style">';
                         $html .= '<thead>';
-                            $html .= '<tr>';
-                                $html .= '<th>Match</th>';
-                                $html .= '<th>Mise</th>';
-                                $html .= '<th>Choix</th>';
-                                $html .= '<th>Cote</th>';
-                                $html .= '<th>Résultat</th>';
-                                $html .= '<th>Date</th>';
-                            $html .= '</tr>';
+                            $html .= $this->getHeaderTableClassement();
                         $html .= '</thead>';
                         $html .= '<tbody>';
+                            // if(empty($listMatch) === false) {
+                            //     foreach($listMatch as $code => $data){
+                            //         if(is_array($data) === true && empty($data) === false) {
+                            //             foreach($data as $match) {
+
+                            //             }
+                            //             unset($match);
+                            //         }
+                            //     }
+                            //     unse($code, $data);
+                            // }
                             if(is_array($this->listHistoPari)) {
                                 foreach($this->listHistoPari as $pari) {
                                     $idCote     = $pari->idCotes;
@@ -76,6 +137,7 @@ class CardHistoParis {
                                         $team = 'teamB';
                                     }
                                     $html .= '<tr>';
+                                        $html .= '<td>'.$this->listMatch[$pari->idMatch]->date->format('d/m/Y H:i').'</td>';
                                         $html .= '<td>'.$this->listMatch[$pari->idMatch]->teamA->equipe.' - '.$this->listMatch[$pari->idMatch]->teamB->equipe.'</td>';
                                         $html .= '<td>'.$pari->montant.'</td>';
                                         $html .= '<td><img class="flag" src="/src/images/flags/'.$this->listMatch[$pari->idMatch]->$team->flag.'.png" style="width:24px;"></td>';
@@ -90,14 +152,7 @@ class CardHistoParis {
                             unset($tabHistoPari);
                         $html .= '</tbody>';
                         $html .= '<tfoot>';
-                            $html .= '<tr>';
-                                $html .= '<th>Match</th>';
-                                $html .= '<th>Mise</th>';
-                                $html .= '<th>Choix</th>';
-                                $html .= '<th>Cote</th>';
-                                $html .= '<th>Résultat</th>';
-                                $html .= '<th>Date</th>';
-                            $html .= '</tr>';
+                            $html .= $this->getHeaderTableClassement();
                         $html .= '</tfoot>';
                     $html .= '</table>';
                 $html .= '</div>';
@@ -107,6 +162,19 @@ class CardHistoParis {
         return $html;
     }
 
+    private function getHeaderTableClassement() {
+        $html = '<tr>';
+            $html .= '<th>Date Match</th>';
+            $html .= '<th>Match</th>';
+            $html .= '<th>Mise</th>';
+            $html .= '<th>Choix</th>';
+            $html .= '<th>Cote</th>';
+            $html .= '<th>Résultat</th>';
+            $html .= '<th>Date</th>';
+        $html .= '</tr>';
+
+        return $html;
+    }
 
 
     /**

@@ -44,6 +44,7 @@ echo '<html>';
         echo '<title>Pari entre amis</title>';
         echo '<link rel="stylesheet" href="./../src/bootstrap-4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">';
         echo '<link rel="stylesheet" href="./../src/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">';
+        echo '<link rel="stylesheet" href="./../src/Strength.js/strength.css">';
         echo '<script type="text/javascript" src="./../src/jquery/jquery-3.3.1.min.js"></script>';
         echo '<link rel="stylesheet" href="./css/index.css">';
     echo '</head>';
@@ -100,8 +101,8 @@ echo '<html>';
                                     echo '<div class="form-group">';
                                         echo '<label>Votre avatar</label>';
                                         echo '<div class="input-group">';
-                                        $labelProtraitChecked = ' labelProtraitChecked';
-                                        $checked = ' checked';
+                                            $labelProtraitChecked = ' labelProtraitChecked';
+                                            $checked = ' checked';
                                             for($i = 1; $i <= 8; $i++) {
                                                 echo '<label for="portrait_'.$i.'" class="labelProtrait'.$labelProtraitChecked.'">';
                                                     echo '<input type="radio" name="avatar" id="portrait_'.$i.'" value="'.$i.'" '.$required.' '.$checked.'/>';
@@ -124,13 +125,13 @@ echo '<html>';
                                         echo '</div>';
                                     echo '</div>';
                                 }
-                                echo '<div class="form-group">';
+                                echo '<div class="form-group" >';
                                     echo '<label>Votre mot de passe</label>';
-                                    echo '<div class="input-group">';
+                                    echo '<div class="input-group input-group-password" >';
                                         echo '<div class="input-group-prepend">';
                                             echo '<span class="input-group-text" id="inputGroupPrependPassWord"> <i class="fa fa-lock"></i> </span>';
                                         echo '</div>';
-                                        echo '<input name="password" class="form-control" placeholder="******" type="password" '.$required.' aria-describedby="inputGroupPrependPassWord"/>';
+                                        echo '<input name="password" class="form-control" id="inputPassWord" placeholder="******" type="password" '.$required.' aria-describedby="inputGroupPrependPassWord"/>';
                                         echo '<div class="invalid-tooltip">Veuillez saisir un mot de passe</div>';
                                     echo '</div>';
                                     if($modeInscription === false) {
@@ -254,6 +255,7 @@ echo '<html>';
         </script>
         <?php
         echo '<script type="text/javascript" src="./../src/bootstrap-4.0.0/js/bootstrap.min.js"></script>';
+        echo '<script type="text/javascript" src="./../src/Strength.js/strength.js"></script>';
         echo '<script type="text/javascript" src="./js/index.js"></script>';
     echo '</body>';
 echo '</html>';

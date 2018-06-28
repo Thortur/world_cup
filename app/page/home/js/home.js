@@ -29,4 +29,52 @@ $(document).ready(function() {
             modal.find('#idScoreBResultat').val(0);
             modal.modal('show');
         });
+// });
+// $(window).on("load", function(){
+    var ctx = $("#area-chart");
+    var chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: {
+            position: 'bottom',
+        },
+        hover: {
+            mode: 'label'
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                gridLines: {
+                    color: "#f3f3f3",
+                    drawTicks: false,
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Matches'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                gridLines: {
+                    color: "#f3f3f3",
+                    drawTicks: false,
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Cagnotte'
+                }
+            }]
+        },
+        title: {
+            display: true,
+            text: 'Votre cagnotte après chaque match'
+        }
+    };
+    
+    var config = {
+        type: 'line',
+        options : chartOptions,
+        data : chartData
+    };
+    var areaChart = new Chart(ctx, config);
 });

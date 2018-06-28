@@ -55,6 +55,9 @@ class CardGraph {
     }
 
     private function calculGraph(object $datas) {
+        // echo '<pre>';
+        // print_r($datas->listTeam);
+        // echo '</pre>';
         if(is_object($datas->listPari)) {
             foreach($datas->listPari as $pari) {
                 $tabUser[$pari->idUser][$pari->idMatch]['montant'] = $pari->montant;
@@ -69,6 +72,9 @@ class CardGraph {
                     $cagnotte[$k_user] = 500;
 
                     foreach($datas->listResultat as $k_match => $v_match) {
+                        if(in_array($k_match,array(17,33))) {
+                            $cagnotte[$k_user] += 500;
+                        }
                         $cagnotte[$k_user] -= $v_user[$k_match]['montant'];
                         $cagnotte[$k_user] += $v_user[$k_match]['gain'];
                         $tab[$k_match][$k_user] = $cagnotte[$k_user];
@@ -81,15 +87,18 @@ class CardGraph {
     }
 
     private function drawGraph(array $tab) {
-        $label = '';
-        $moyenne = '';
-        $perso = '';
-        $sepa = '';
-        if(is_array($tab)) {
+        $sepa      = null;
+        $tabReturn = array(
+            'label'   => null,
+            'moyenne' => null,
+            'perso'   => null,
+        );
+
+        if(is_array($tab) === true && empty($tab) === false) {
             foreach($tab as $k_match => $v_match) {
                 $moy = 0;
                 $per = 0;
-                if(is_array($v_match)) {
+                if(is_array($v_match) === true && empty($v_match) === false) {
                     $total = 0;
                     foreach($v_match as $k_user => $v_user) {
                         $total += $v_user;
@@ -97,18 +106,17 @@ class CardGraph {
                             $per = $v_user;
                         }
                     }
+                    unset($k_user, $v_user);
                     $moy = round(($total / count($v_match)),0);
                 }
-                $label .= $sepa.'"Match '.$k_match.'"';
-                $moyenne .= $sepa.$moy;
-                $perso .= $sepa.$per;
+                $tabReturn['label']   .= $sepa.'"Match '.$k_match.'"';
+                $tabReturn['moyenne'] .= $sepa.$moy;
+                $tabReturn['perso']   .= $sepa.$per;
                 $sepa = ',';
             }
+            unset($k_match, $v_match, $moy, $per);
         }
 
-        $tabReturn['label'] = $label;
-        $tabReturn['moyenne'] = $moyenne;
-        $tabReturn['perso'] = $perso;
 
         return $tabReturn;
     }
